@@ -16,6 +16,7 @@ import { getProjects,getSingleTeam, removeProject } from "./ProjectSlice";
 import ProjectCard from "./ProjectCard";
 import useAuth from "../../hooks/useAuth";
 import NewProject from "./NewProject";
+import EditProject from "./EditProject";
 
 const style = {
   position: 'absolute',
@@ -51,6 +52,7 @@ function Projects () {
     setProjectId("")
   };
   const handleOpenEditProject = (id) => {
+    console.log(id)
     setOpenEditProject(true)
     setProjectId(id)
   };
@@ -135,17 +137,16 @@ function Projects () {
             </Box>
           </Modal>
 
-          {/* <Modal
+           <Modal
             open={openEditProject}
             onClose={handleCloseEditProject}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            {/* <EditProject 
+             <EditProject
               handleCloseEditProject={handleCloseEditProject} 
-              assignee={assignee}
-              ProjectId={ProjectId}/> */}
-          {/* </Modal> */} 
+              projectId={projectId}/> 
+          </Modal> 
     </Container>
   );
 };

@@ -130,6 +130,7 @@ function TaskInProject( {projectId}) {
           >
             <EditTask 
               handleCloseEditTask={handleCloseEditTask} 
+              projectId={projectId}
               assignee={assignee}
               taskId={taskId}/>
           </Modal>

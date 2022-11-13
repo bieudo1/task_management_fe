@@ -68,6 +68,16 @@ const slice = createSlice({
           const {team} = action.payload
           state.usersInTeam = team.workers.map((user) =>({value: user._id,label: user.name}))
 
+        },
+        putProject(state,action) {
+          state.isLoading = false;
+          state.error = null;
+          
+          const {projectId,editProject} = action.payload
+
+          state.projectsById[projectId].name = editProject.name
+          state.projectsById[projectId].description = editProject.description
+          state.projectsById[projectId].assignee = editProject.assignee
         }
     }
 
@@ -105,6 +115,22 @@ export const getProjects = () =>async (dispatch) => {
       const response = await apiService.post(`/projects/`,{name,teamId,status,description,assignee});
       console.log(response.data)
       dispatch(slice.actions.postProject(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      toast.error(error.message);
+    }
+  };
+
+  export const editProject = ({name,description,assignee, projectId}) => async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    
+    try {
+      const response = await apiService.put(`/projects/${projectId}`,{name,description,assignee});
+      console.log(response.data)
+      dispatch(slice.actions.putProject({
+        projectId,
+        editProject:response.data}
+        ));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
       toast.error(error.message);

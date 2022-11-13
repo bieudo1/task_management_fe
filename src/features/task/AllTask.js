@@ -23,27 +23,25 @@ const yupSchema = Yup.object().shape({
 const defaultValues = {
   name: "",
   assignee:"",
-  dueAt:null,
   important:false,
   urgent:false
 };
 
 function AllTask({projectId,assignee,handleCloseAllTasks}) {
 
-  const [value, setValue] = React.useState(dayjs());
-  const date = moment(value).format("YYYY-MM-DD");                         ;
-
+  const [value, setValue] = React.useState();
+  
   const { isLoading } = useSelector(
     (state) => state.task
-  );
+    );                      ;
+    const handleChange = (newValue) => {
+      setValue(moment(newValue.$d).format("YYYY-MM-DD"));
+    };
 
-  const handleChange = (newValue) => {
-    setValue(newValue);
-  };
-
+    console.log(value)
   const methods = useForm({
     resolver: yupResolver(yupSchema),
-    defaultValues : {...defaultValues, assignee:assignee[0].value,dueAt:date},
+    defaultValues : {...defaultValues, assignee:assignee[0].value},
   });
   const {
     handleSubmit,
@@ -54,10 +52,10 @@ function AllTask({projectId,assignee,handleCloseAllTasks}) {
   const dispatch = useDispatch();
 
   const onSubmit = async (data) => {
-    let { name, assignee, dueAt,important,urgent } = data;
+    let { name, assignee,important,urgent } = data;
     try {
-      dispatch(postNewTask({ name, assignee, dueAt,important,urgent,projectId }));
-      console.log(data,projectId)
+      dispatch(postNewTask({ name, assignee, dueAt:value,important,urgent,projectId }));
+      console.log(data,projectId,value)
     } catch (error) {
       reset();
       setError("responseError", error);

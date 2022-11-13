@@ -15,36 +15,35 @@ import * as Yup from "yup";
 import { LoadingButton } from "@mui/lab";
 import moment from "moment";
 import { editTask } from "./TaskSlice";
+import { getTaskInProject } from "./TaskSlice";
+
 
 const yupSchema = Yup.object().shape({
   name: Yup.string().required("name is required"),
 });
 
 
-function EditTask({taskId,assignee,handleCloseEditTask}) {
-
-  const [value, setValue] = React.useState(dayjs());
-  const date = moment(value).format("YYYY-MM-DD");                         ;
-  console.log(assignee)
+function EditTask({taskId,assignee,handleCloseEditTask,projectId}) {
   const { isLoading,tasksById } = useSelector(
     (state) => state.task
   );
+  const dispatch = useDispatch();
+  const [value, setValue] = React.useState(tasksById[taskId].dueAt,);                       ;
+  console.log(assignee)
+  
 
 
   const handleChange = (newValue) => {
-    setValue(newValue);
+    setValue(moment(newValue.$d).format("YYYY-MM-DD"));
   };
   const defaultValues = {
     name: tasksById[taskId].name,
     assignee:tasksById[taskId].assignee,
-    dueAt:tasksById[taskId].dueAt,
     important:tasksById[taskId].important,
     urgent:tasksById[taskId].urgent,
     taskId:taskId
   };
-  useEffect(() =>{
-    
-  },[taskId])
+
   
 
   const methods = useForm({
@@ -57,13 +56,12 @@ function EditTask({taskId,assignee,handleCloseEditTask}) {
     setError,
     formState: { isSubmitting },
   } = methods;
-  const dispatch = useDispatch();
 
   const onSubmit = async (data) => {
-    let { name, assignee, dueAt,important,urgent } = data;
-    console.log(name)
+    let { name, assignee,important,urgent } = data;
     try {
-      dispatch(editTask({ name, assignee, dueAt,important,urgent,taskId }));
+      dispatch(editTask({ name, assignee, dueAt:value,important,urgent,taskId }));
+      handleCloseEditTask()
       console.log(data,taskId)
     } catch (error) {
       reset();

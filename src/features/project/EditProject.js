@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import ListItem from '@mui/material/ListItem';
-import {  newProject } from "./ProjectSlice";
+import {  editProject } from "./ProjectSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { FormProvider, FTextField,FSelect } from "../../components/form";
 import { useForm } from "react-hook-form";
@@ -25,32 +25,34 @@ const RegisterSchema = Yup.object().shape({
 });
 
 
-const defaultValues = {
-  name: "",
-  description:"",
-  member:null
-};
 
-function NewProject({handleCloseNewProject}) {
+
+function EditProject({handleCloseEditProject,projectId}) {
 
   const user0 = [{value:"",label:"",}]
-  const {usersInTeam} = useSelector(state=>state.project)
-    const [assignee, setAssignee] = useState([])
-    const [users, setUsers] = useState(user0.concat(usersInTeam))
-    const [selectedUser, setSelectedUser] = useState([])
+  const {usersInTeam,projectsById} = useSelector(state=>state.project)
 
-  //   useEffect(()=>{
-  //     setUsers(usersInTeam)
-  // },[usersInTeam])
 
-  const handleDeleteSelect = (id) => {
-    setAssignee(assignee.filter(a => a !== id))
-    setUsers([...users, ...selectedUser.filter(u => u.value === id)])
-    setSelectedUser(selectedUser.filter(u => u.value !== id))
-  }
+    let oldUser = []
+    projectsById[projectId].assignee.forEach(user => 
+      oldUser= [...oldUser, ...usersInTeam.filter(u => u.value === user._id)]
+    )       
+    const [assignee, setAssignee] = useState(oldUser.map(user => user.value))
+    const [users, setUsers] = useState(user0.concat(usersInTeam.filter(x => !oldUser.includes(x))))
+    const [selectedUser, setSelectedUser] = useState(oldUser)
+      console.log(assignee.filter(a=> a !== null))
 
-    console.log(users)
-    console.log(selectedUser)
+    const defaultValues = {
+      name: projectsById[projectId].name,
+      description:projectsById[projectId].description,
+      member:null
+    };
+
+    const handleDeleteSelect = (id) => {
+      setAssignee(assignee.filter(a => a !== id))
+      setUsers([...users, ...selectedUser.filter(u => u.value === id)])
+      setSelectedUser(selectedUser.filter(u => u.value !== id))
+    }
  
   const { user } = useAuth();
   const dispatch = useDispatch();
@@ -69,21 +71,19 @@ function NewProject({handleCloseNewProject}) {
   } = methods;
 
   const watchMember = watch("member"); 
-  console.log(watchMember)
+
   useEffect(() => {
     setAssignee([...assignee, watchMember])
     setUsers(users.filter(u=> u.value !== watchMember))
     setSelectedUser( [ ...selectedUser, ...users.filter(u=> u.value === watchMember)])
-    console.log(watchMember)
+
   }, [watchMember]);
-  console.log(selectedUser)
   const onSubmit = async (data) => {
     let { name,description } = data;
-      assignee.shift()
-      console.log(assignee)
+     const treatmentAssignee = assignee.filter(a=> a !== null)
     try {
-      dispatch(newProject({ name,description,teamId:user.team._id,assignee,status:"working" }));
-      handleCloseNewProject()
+      dispatch(editProject({ name,description,assignee:treatmentAssignee, projectId}));
+      handleCloseEditProject()
     } catch (error) {
       reset();
       setError("responseError", error);
@@ -123,11 +123,11 @@ function NewProject({handleCloseNewProject}) {
               <List>
                 {selectedUser.map( user => (
                 <ListItem key= {user.value} >
-                  <p>{user.label}</p>
-                  <Button onClick={()=>handleDeleteSelect(user.value)}>
-                    <ClearIcon sx = {{ width: "0.5em",height: "0.5em"}} />
-                  </Button>
-                </ListItem>
+                <p>{user.label}</p>
+                <Button onClick={()=>handleDeleteSelect(user.value)}>
+                  <ClearIcon sx = {{ width: "0.5em",height: "0.5em"}} />
+                </Button>
+              </ListItem>
                 ))}
               </List>}
           <LoadingButton
@@ -141,10 +141,10 @@ function NewProject({handleCloseNewProject}) {
           </LoadingButton>
         </Stack>
       </FormProvider>
-        <Button onClick={() =>handleCloseNewProject()}>Cancel</Button>
+        <Button onClick={() =>handleCloseEditProject()}>Cancel</Button>
         </Card>
     </Container>
   );
 }
 
-export default NewProject;
+export default EditProject;

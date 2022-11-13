@@ -73,14 +73,19 @@ const slice = createSlice({
           state.error = null;
     
           const {taskId, editTask} = action.payload;
+
           state.tasksById[taskId].name= editTask.name;
+          state.tasksById[taskId].assignee= editTask.assignee;
+          state.tasksById[taskId].dueAt= editTask.dueAt;
+          state.tasksById[taskId].important= editTask.important;
+          state.tasksById[taskId].urgent= editTask.urgent;
         },
         putTaskMine(state,action){
           state.isLoading = false;
           state.error = null;
     
           const {taskId, editTask} = action.payload;
-          console.log()
+
           state.tasksMineById[taskId].review= editTask.review;
           state.tasksMineById[taskId].reviewAt= editTask.reviewAt;
           state.tasksMineById[taskId].progress= editTask.progress;
