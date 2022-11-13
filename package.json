@@ -1,0 +1,66 @@
+{
+  "name": "cc-client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ant-design/icons": "^4.7.0",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@hookform/resolvers": "^2.8.8",
+    "@mui/icons-material": "^5.5.1",
+    "@mui/lab": "^5.0.0-alpha.74",
+    "@mui/material": "^5.10.9",
+    "@mui/styles": "^5.10.6",
+    "@mui/x-date-pickers": "^5.0.7",
+    "@reduxjs/toolkit": "^1.8.0",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.26.1",
+    "change-case": "^4.1.2",
+    "chart.js": "^3.9.1",
+    "date-fns": "^2.29.3",
+    "dayjs": "^1.11.6",
+    "drag-tabs": "^2.3.0",
+    "jwt-decode": "^3.1.2",
+    "lodash": "^4.17.21",
+    "luxon": "^2.5.0",
+    "moment": "^2.29.4",
+    "numeral": "^2.0.6",
+    "react": "^17.0.2",
+    "react-beautiful-dnd": "^13.1.1",
+    "react-chartjs-2": "^4.3.1",
+    "react-dom": "^17.0.2",
+    "react-dropzone": "^12.0.4",
+    "react-hook-form": "^7.28.1",
+    "react-markdown": "^8.0.1",
+    "react-moment": "^1.1.2",
+    "react-redux": "^7.2.6",
+    "react-router-dom": "^6.4.1",
+    "react-scripts": "5.0.0",
+    "react-toastify": "^8.2.0",
+    "rehype-raw": "^6.1.1",
+    "yup": "^0.32.11"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
