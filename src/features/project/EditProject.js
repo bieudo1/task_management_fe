@@ -2,9 +2,7 @@ import React, { useState,useEffect } from "react";
 import {
   Button,alpha,
   Stack,Card,
-  Alert,Box,
-  IconButton,
-  InputAdornment,
+  Alert,
   Container,List,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
@@ -16,7 +14,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ClearIcon from '@mui/icons-material/Clear';
 import * as Yup from "yup";
-import useAuth from "../../hooks/useAuth";
 
 
 const RegisterSchema = Yup.object().shape({
@@ -53,8 +50,6 @@ function EditProject({handleCloseEditProject,projectId}) {
       setUsers([...users, ...selectedUser.filter(u => u.value === id)])
       setSelectedUser(selectedUser.filter(u => u.value !== id))
     }
- 
-  const { user } = useAuth();
   const dispatch = useDispatch();
 
   const methods = useForm({
@@ -120,7 +115,7 @@ function EditProject({handleCloseEditProject,projectId}) {
                 ))}
               </FSelect>
               {(selectedUser.lenght !== 0 )&& 
-              <List>
+              <List sx ={{display: "flex",overflowX:"auto",overflowY:"auto"}}>
                 {selectedUser.map( user => (
                 <ListItem key= {user.value} >
                 <p>{user.label}</p>

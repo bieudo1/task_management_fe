@@ -9,7 +9,7 @@ import customizeComponents from "./customizations";
 const PRIMARY = {
   lighter: "#C8FACD",
   light: "#5BE584",
-  main: "#00AB55",
+  main: "#fd7e14",
   dark: "#007B55",
   darker: "#005249",
   contrastText: "#FFF",

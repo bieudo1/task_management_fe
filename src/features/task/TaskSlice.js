@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
+import { cloudinaryUpload } from "../../utils/cloudinary";
 import apiService from "../../app/apiService";
 
 const initialState = {
@@ -7,12 +8,10 @@ const initialState = {
     error: null,
     listTasks: [],
     tasksById:{},
+    statusArchive:[],
     currentPageTasks: [],
     singleTask: null,
     totalPages: 1,
-    currentTasksMine:[],
-    tasksMineById:{},
-    tasksMineList:[]
   };
 
 const slice = createSlice({
@@ -35,20 +34,13 @@ const slice = createSlice({
           state.totalTasks  = count;
           state.totalPages = totalPages;
         },
-        getTasksMineList(state,action){
-          state.isLoading = false;
-          state.error = null;
-
-          const { tasks } = action.payload;
-          state.tasksMineList = tasks
-          tasks.forEach((task) => (state.tasksMineById[task._id] = task));
-          state.currentTasksMine = tasks.map((task) => task._id);
-      },
         getTask(state,action){
           state.isLoading = false;
           state.error = null;
 
           const {tasks} = action.payload;
+          state.statusArchive = tasks.filter((task) => task.status === "archive")
+          state.totalTasks  = tasks.length;
           tasks.forEach((task) => (state.tasksById[task._id] = task));
           state.currentPageTasks = tasks.map((task) => task._id);
         },
@@ -73,23 +65,11 @@ const slice = createSlice({
           state.error = null;
     
           const {taskId, editTask} = action.payload;
-
-          state.tasksById[taskId].name= editTask.name;
-          state.tasksById[taskId].assignee= editTask.assignee;
-          state.tasksById[taskId].dueAt= editTask.dueAt;
-          state.tasksById[taskId].important= editTask.important;
-          state.tasksById[taskId].urgent= editTask.urgent;
-        },
-        putTaskMine(state,action){
-          state.isLoading = false;
-          state.error = null;
-    
-          const {taskId, editTask} = action.payload;
-
-          state.tasksMineById[taskId].review= editTask.review;
-          state.tasksMineById[taskId].reviewAt= editTask.reviewAt;
-          state.tasksMineById[taskId].progress= editTask.progress;
-          state.tasksMineById[taskId].status= editTask.status;
+          
+          if(editTask.status === "archive"){
+            state.statusArchive.unshift(editTask);
+          }
+          state.tasksById[taskId]= editTask;
         },
     }
 
@@ -102,7 +82,7 @@ export const getTasksMine =
     dispatch(slice.actions.startLoading());
     try {
       const response = await apiService.get("/tasks/me");
-      dispatch(slice.actions.getTasksMineList(response.data));
+      dispatch(slice.actions.getTask(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
       toast.error(error.message);
@@ -143,7 +123,7 @@ export const getTasksMine =
     try {
       const response = await apiService.put(`/tasks/${taskId}`,{status});
       console.log(response.data)
-      dispatch(slice.actions.putTaskMine({
+      dispatch(slice.actions.removeEditSuccess({
         taskId,
         editTask: response.data,
       }));
@@ -201,7 +181,7 @@ export const getTasksMine =
     try {
       const response =await apiService.put(`/tasks/review/${taskId}`,{review});
       console.log(response)
-      dispatch(slice.actions.putTaskMine({
+      dispatch(slice.actions.removeEditSuccess({
         taskId,
         editTask: response.data,
       }));
@@ -211,13 +191,12 @@ export const getTasksMine =
     }
   };
   export const progressTask =
-  ({value,taskId}) =>
+  ({progress,taskId}) =>
   async (dispatch) => {
-    dispatch(slice.actions.startLoading());
     try {
-      const response =await apiService.put(`/tasks/${taskId}`,{value});
+      const response =await apiService.put(`/tasks/${taskId}`,{progress});
       console.log(response)
-      dispatch(slice.actions.putTaskMine({
+      dispatch(slice.actions.removeEditSuccess({
         taskId,
         editTask: response.data,
       }));
@@ -226,3 +205,19 @@ export const getTasksMine =
       toast.error(error.message);
     }
   };
+  export const createFile = ({projectId,file,taskId}) =>async (dispatch) => {
+    console.log(projectId)
+      dispatch(slice.actions.startLoading());
+      try {
+        const FileUrl = await cloudinaryUpload(file);
+        const response = await apiService.post(`/files/`,{FileUrl,projectId,taskId});
+        console.log(response.data)
+        dispatch(slice.actions.removeEditSuccess({
+          taskId,
+          editTask:response.data.task
+        }));
+      } catch (error) {
+        dispatch(slice.actions.hasError(error));
+        toast.error(error.message);
+      }
+    }

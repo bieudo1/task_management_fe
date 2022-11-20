@@ -28,11 +28,9 @@ const slice = createSlice({
             state.isLoading = false;
             state.error = null;
 
-          const { files, count, totalPages } = action.payload;
+          const { files } = action.payload;
           files.forEach((file) => (state.filesById[file._id] = file));
           state.currentPageFiles = files.map((file) => file._id);
-          state.count= count;
-          state.totalPages = totalPages;
         },
     }
 
@@ -56,8 +54,8 @@ export const getFiles = ({projectId}) =>async (dispatch) => {
     console.log(projectId)
       dispatch(slice.actions.startLoading());
       try {
-      const FileUrl = await cloudinaryUpload(file);
-        const response = await apiService.get(`/files/`,{FileUrl});
+        const FileUrl = await cloudinaryUpload(file);
+        const response = await apiService.post(`/files/`,{FileUrl,projectId,taskId});
         console.log(response.data)
         dispatch(slice.actions.postFile(response.data));
       } catch (error) {

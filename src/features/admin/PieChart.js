@@ -7,7 +7,7 @@ export default function PieChart({statur}) {
 return (
   <Doughnut
         data={{
-          labels: ["archive","working","review","rework","done"],
+          labels: ["archive","working","review","done","rework"],
     datasets:[{
       label: "Count Statur",
       data: statur.slice(0,5),
@@ -15,8 +15,8 @@ return (
         "#CC66FF",
         "#42a5f5",
         "#ffb300",
-        "#ef5350",
         "#4caf50",
+        "#ef5350",
       ],
     }],
         }}

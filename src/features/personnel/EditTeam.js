@@ -11,31 +11,41 @@ import ListItem from '@mui/material/ListItem';
 import ClearIcon from '@mui/icons-material/Clear';
 import { LoadingButton } from "@mui/lab";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
 import { FormProvider, FTextField,FSelect } from "../../components/form";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { postNewTeam } from "./PersonnelSlice";
+import { editTeam } from "./PersonnelSlice";
 
 const RegisterSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
 });
 
 
-const defaultValues = {
-  name: "",
-  manager: "",
-  workers: null,
-};
 
-function NewTeam({ workerList, managerList,handleCloseNewTeam }) {
-  const user0 = [{value:"",label:"",}]
-    const [workers, setWorkers] = useState([])
-    const [selectedUser, setSelectedUser] = useState([])
-    const [workerOption, setWorkerOption] = useState(user0.concat(workerList))
+
+function EditTeam({ teamId,workerList, managerList,handleCloseEditTeam }) {
+  const {teamsById} = useSelector(
+    (state) => state.personnel,
+  );
+  let oldUser = []
+  teamsById[teamId].workers.forEach(user => 
+      oldUser= [...oldUser, ...workerList.filter(u => u.value === user._id)]
+    )  
+    const user0 = [{value:"",label:"",}]
+    const [workers, setWorkers] = useState(oldUser.map(user => user.value))
+    const [selectedUser, setSelectedUser] = useState(oldUser)
+    const [workerOption, setWorkerOption] = useState(user0.concat(workerList.filter(x => !oldUser.includes(x))))
     const dispatch = useDispatch();
   
+    const defaultValues = {
+      name: teamsById[teamId].name,
+      manager: teamsById[teamId].manager._id,
+      workers: null,
+    };
+
   const methods = useForm({
     resolver: yupResolver(RegisterSchema),
     defaultValues
@@ -69,8 +79,8 @@ function NewTeam({ workerList, managerList,handleCloseNewTeam }) {
     let { name,manager } = data;
     workers.shift()
     try {
-      dispatch(postNewTeam({ name,manager,workers }));
-      handleCloseNewTeam()
+      dispatch(editTeam({ name,manager,workers,teamId }));
+      handleCloseEditTeam()
     } catch (error) {
       reset();
       setError("responseError", error);
@@ -106,7 +116,7 @@ function NewTeam({ workerList, managerList,handleCloseNewTeam }) {
                 ))}
               </FSelect>
               {(selectedUser.lenght !== 0 )&& 
-              <List sx ={{display: "flex",overflowX:"auto",overflowY:"auto"}}>
+              <List sx ={{display: "flex",overflowX:"auto",overflowY:"auto",}}>
                 {selectedUser.map( user => (
                 <ListItem key= {user.value} >
                   <p>{user.label}</p>
@@ -132,4 +142,4 @@ function NewTeam({ workerList, managerList,handleCloseNewTeam }) {
   );
 }
 
-export default NewTeam;
+export default EditTeam;

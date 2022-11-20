@@ -3,10 +3,10 @@ import { styled } from '@mui/material/styles';
 import {Box,Typography,Grid,Slider} from '@mui/material';
 
 
-export default function ScrollBar({handleBlur}) {
+export default function ScrollBar() {
   const [value, setValue] = React.useState(0);
 
-  const handleSliderChange = (event, newValue) => {
+  const handleSliderChange = (newValue) => {
     setValue(newValue);
   };
 
@@ -18,8 +18,7 @@ export default function ScrollBar({handleBlur}) {
           <Slider
             size="small"
             value={typeof value === 'number' ? value : 0}
-            onChange={handleSliderChange}
-            onBlur={(e)=> handleBlur(e,value)}
+            onClick={handleSliderChange}
             aria-labelledby="input-slider"
           />
         </Grid>

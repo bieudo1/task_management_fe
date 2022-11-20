@@ -8,6 +8,7 @@ const initialState = {
     currentPageProjects: [],
     projectsById:{},
     assignee: [],
+    progress:null,
     singleProject:null,
     totalPages: 1,
     usersInTeam:[],
@@ -31,6 +32,7 @@ const slice = createSlice({
             state.error = null;
 
           const { projects, count, totalPages } = action.payload;
+
           projects.forEach((project) => (state.projectsById[project._id] = project));
           state.currentPageProjects = projects.map((project) => project._id);
           state.count= count;
@@ -40,8 +42,15 @@ const slice = createSlice({
           state.isLoading = false;
           state.error = null;
 
-          state.singleProject = action.payload;
-          state.assignee = action.payload.assignee.map((user) =>({value: user._id,label: user.name}))
+          const {project} = action.payload
+          state.singleProject = project;
+          state.assignee = project.assignee.map((user) =>({value: user._id,label: user.name}))
+          if (project.task.length !== 0)
+          { 
+          const listprogress = project.task.map((ta)=> ta.progress)
+          const total = listprogress.reduce((accumulator, currentValue) => accumulator + currentValue)
+          state.progress = total/listprogress.length
+        }
 
         },
         postProject(state,action){
@@ -126,6 +135,22 @@ export const getProjects = () =>async (dispatch) => {
     
     try {
       const response = await apiService.put(`/projects/${projectId}`,{name,description,assignee});
+      console.log(response.data)
+      dispatch(slice.actions.putProject({
+        projectId,
+        editProject:response.data}
+        ));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      toast.error(error.message);
+    }
+  };
+
+  export const projectFinished = ({status, projectId}) => async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    
+    try {
+      const response = await apiService.put(`/projects/${projectId}`,{status});
       console.log(response.data)
       dispatch(slice.actions.putProject({
         projectId,

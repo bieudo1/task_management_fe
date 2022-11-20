@@ -23,13 +23,11 @@ const RegisterSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string().required("Password is required"),
-    role: Yup.string(),
-    team: Yup.string(),
+    position: Yup.string(),
     phone1: Yup.number(),
-    phone2: Yup.number(),
 });
 
-const FILTER_ROLE  = [
+const FILTER_POSITION  = [
   {value: "Manager", label:"Manager"},
   {value: "Worker", label:"Worker"},
 ];
@@ -40,22 +38,24 @@ const defaultValues = {
   email: "",
   password: "",
   team:"",
-  role:"Manager",
+  position:"Manager",
   phone1:"",
   phone2:"",
 };
 
 function NewUser({handleCloseNewUser}) {
+  const user0 = [{value:"",label:"",}]
     const {teamOptions} = useSelector(
         (state) => state.personnel
       );
       console.log(teamOptions)
+      const teamList = user0.concat(teamOptions)
     const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
   const methods = useForm({
     resolver: yupResolver(RegisterSchema),
-    defaultValues: {...defaultValues, team: teamOptions[0].value}
+    defaultValues: {...defaultValues, team: teamList[0].value}
   });
   const {
     handleSubmit,
@@ -65,11 +65,11 @@ function NewUser({handleCloseNewUser}) {
   } = methods;
 
   const onSubmit = async (data) => {
-    let { name, email, password,phone1,phone2,role,team } = data;
+    let { name, email, password,phone1,phone2,position,team } = data;
     if(!team) (team = teamOptions[0].value )
-    console.log(phone1,phone2,role,team)
+    console.log(phone1,phone2,position,team)
     try {
-      dispatch(postNewUser({ name, email, password,phone1,phone2,role,team }));
+      dispatch(postNewUser({ name, email, password,phone1,phone2,position,teamId:team }));
       handleCloseNewUser()
     } catch (error) {
       reset();
@@ -105,11 +105,11 @@ function NewUser({handleCloseNewUser}) {
             }}
           />
           <FSelect
-          name="role"
-          label= "role"
+          name="position"
+          label= "position"
           size="small" sx={{ width: 300 }}
           >
-          {FILTER_ROLE.map((option) => (
+          {FILTER_POSITION.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
             </option>
@@ -121,7 +121,7 @@ function NewUser({handleCloseNewUser}) {
           label= "team"
           size="small" sx={{ width: 300 }}
           >
-          {teamOptions.map((option) => (
+          {teamList.map((option) => (
           <option key={option.value} value={option.value} >
             {option.label}
             </option>

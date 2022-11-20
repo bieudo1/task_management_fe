@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Stack,
   Typography,
   Card,
   Box,
+  Container,
   TablePagination,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,7 +26,7 @@ function TaskTeam() {
   );
   let params = new URLSearchParams(location.search);
 
-  let filterName = params.get("q");
+  let filterName = params.get("task");
 
   const dispatch = useDispatch();
 
@@ -44,7 +45,7 @@ function TaskTeam() {
   }, [filterName, page, rowsPerPage, dispatch]);
 
   return (
-    <>
+    <Container sx = {{margin:"64px"}}>
     { isLoading || !listTasks ? (
       <LoadingScreen/>
     ):(
@@ -54,7 +55,7 @@ function TaskTeam() {
       <Card sx={{ p: 3 }}>
         <Stack spacing={2}>
           <Stack direction={{ xs: "column", md: "row" }} alignItems="center">
-            <SearchInput />
+            <SearchInput type={"task"} />
             <Typography
               variant="subtitle"
               sx={{ color: "text.secondary", ml: 1 }}
@@ -89,7 +90,7 @@ function TaskTeam() {
       </Card>
     </>
     )}
-    </>
+    </Container>
   );
 }
 

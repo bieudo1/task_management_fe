@@ -1,35 +1,29 @@
 import React, { useCallback } from "react";
-import { Box, Card, alpha, Stack } from "@mui/material";
+import { Box, Card, Stack,Button } from "@mui/material";
 
-import { FormProvider, FTextField, FUploadImage } from "../../components/form";
+import { FormProvider, FUploadImage } from "../../components/form";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
-import { createPost } from "./postSlice";
+import { createFile } from "./TaskSlice";
 import { LoadingButton } from "@mui/lab";
 
-const yupSchema = Yup.object().shape({
-  content: Yup.string().required("Content is required"),
-});
-
 const defaultValues = {
-  image: null,
+  file: null,
 };
 
-function PostForm() {
-  const { isLoading } = useSelector((state) => state.post);
+function FileTask({handleCloseFileTask,taskId,projectId}) {
+  const { isLoading } = useSelector((state) => state.task);
 
   const methods = useForm({
-    resolver: yupResolver(yupSchema),
     defaultValues,
   });
+
   const {
     handleSubmit,
-    reset,
     setValue,
     formState: { isSubmitting },
   } = methods;
+
   const dispatch = useDispatch();
 
   const handleDrop = useCallback(
@@ -38,7 +32,7 @@ function PostForm() {
 
       if (file) {
         setValue(
-          "image",
+          "file",
           Object.assign(file, {
             preview: URL.createObjectURL(file),
           })
@@ -49,7 +43,7 @@ function PostForm() {
   );
   const onSubmit = (data) => {
     console.log(data)
-    dispatch(createPost(data)).then(() => reset());
+    dispatch(createFile({...data,taskId,projectId}));
   };
 
   return (
@@ -57,8 +51,7 @@ function PostForm() {
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2}>
           <FUploadImage
-            name="image"
-            // accept="image/*"
+            name="file"
             maxSize={3145728}
             onDrop={handleDrop}
           />
@@ -74,10 +67,18 @@ function PostForm() {
               type="submit"
               variant="contained"
               size="small"
+              sx={{marginRight: "10px"}}
               loading={isSubmitting || isLoading}
             >
-              Post
+              to send
             </LoadingButton>
+            <Button
+              variant="contained"
+              size="small"
+              onClick = {()=>handleCloseFileTask()}
+            >
+              Cancel
+            </Button>
           </Box>
         </Stack>
       </FormProvider>
@@ -85,4 +86,4 @@ function PostForm() {
   );
 }
 
-export default PostForm;
+export default FileTask;

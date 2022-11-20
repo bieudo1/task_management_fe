@@ -29,6 +29,9 @@ export const style = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+  display: "flex",
+  alignItems: "center",
+  flexDirection: "column"
 };
 
 

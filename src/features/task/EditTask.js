@@ -1,10 +1,10 @@
-import React,{useEffect} from "react";
+import React from "react";
 import { Box, Card,Button, alpha, Stack,TextField } from "@mui/material";
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import dayjs from 'dayjs';
+
 
 import { FormProvider,FCheckbox, FTextField,FSelect } from "../../components/form";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,7 +15,7 @@ import * as Yup from "yup";
 import { LoadingButton } from "@mui/lab";
 import moment from "moment";
 import { editTask } from "./TaskSlice";
-import { getTaskInProject } from "./TaskSlice";
+
 
 
 const yupSchema = Yup.object().shape({
@@ -127,7 +127,7 @@ function EditTask({taskId,assignee,handleCloseEditTask,projectId}) {
               size="small"
               loading={isSubmitting || isLoading}
             >
-              All Task
+              Edit Task
             </LoadingButton>
           </Box>
         </Stack>

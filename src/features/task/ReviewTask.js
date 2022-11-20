@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Stack, TextField,Card, IconButton,List,Typography,Box} from "@mui/material";
+import { Stack, TextField,Card, IconButton,List,Typography} from "@mui/material";
 import ListItem from '@mui/material/ListItem';
 import SendIcon from "@mui/icons-material/Send";
 
@@ -8,7 +8,7 @@ import SendIcon from "@mui/icons-material/Send";
 import { useDispatch } from "react-redux";
 import { reviewTask } from "./TaskSlice";
 
-function ReviewTask({ taskId ,reviewList,reviewAt,handleCloseReviewTask }) {
+function ReviewTask({ taskId ,reviewList,handleCloseReviewTask }) {
 
   const [review, setReview] = useState("");
   const dispatch = useDispatch();
@@ -28,7 +28,6 @@ function ReviewTask({ taskId ,reviewList,reviewAt,handleCloseReviewTask }) {
         {reviewList.map((review,index) => (
           <ListItem key={index} sx={{flexDirection: "column",alignItems: "flex-start"}}>
               <Typography>{review}</Typography>
-              <Typography>{reviewAt[index]}</Typography>
           </ListItem>
         ))}
       </List>

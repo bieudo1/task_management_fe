@@ -4,6 +4,7 @@ import { useDropzone } from "react-dropzone";
 import { styled } from "@mui/material/styles";
 import { Box, Stack, Typography } from "@mui/material";
 import RejectionFiles from "./RejectionFiles";
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 import AddAPhotoRoundedIcon from "@mui/icons-material/AddAPhotoRounded";
 
 const DropZoneStyle = styled("div")(({ theme }) => ({
@@ -56,14 +57,14 @@ function UploadSingleFile({ error = false, file, helperText, sx, ...other }) {
           alignItems="center"
           sx={{ height: "100%" }}
         >
-          <AddAPhotoRoundedIcon />
+          <FileUploadIcon />
           <Typography
             gutterBottom
             variant="body2"
             sx={{ color: "#637381" }}
             textAlign="center"
           >
-            Drop or Select Image
+            Drop or Select File
           </Typography>
         </Stack>
 

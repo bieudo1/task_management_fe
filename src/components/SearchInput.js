@@ -4,15 +4,14 @@ import { IconButton, InputAdornment, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 
-function SearchInput({ handleSubmit }) {
+function SearchInput({ handleSubmit,type }) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const navigate = useNavigate()
 
   const onSubmit = (e) => {
     e.preventDefault();
-    // handleSubmit(searchQuery);
-    navigate(`?q=${searchQuery}`)
+    navigate(`?${type}=${searchQuery}`)
   };
 
   return (

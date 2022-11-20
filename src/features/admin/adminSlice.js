@@ -42,10 +42,11 @@ const slice = createSlice({
 }) 
 export default slice.reducer;
 
-export const getCount = () =>async (dispatch) => {
+export const getCount = ({watchDate}) =>async (dispatch) => {
   dispatch(slice.actions.startLoading());
   try {
-    const response = await apiService.get("users/admin");
+    const params = { watchDate };
+    const response = await apiService.get(`users/admin`,{ params } );
     console.log(response.data)
     dispatch(slice.actions.getAdmin(response.data));
   } catch (error) {

@@ -60,6 +60,7 @@ function AccountPage() {
   };
 
   return (
+    <Box sx = {{margin:"64px"}}>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
@@ -107,16 +108,12 @@ function AccountPage() {
               <FTextField name="jobTitle" label="Job Title" />
               <FTextField name="company" label="Company" />
 
-              <FTextField name="phoneNumber" label="Phone Number" />
-              <FTextField name="address" label="Address" />
-
-              <FTextField name="city" label="City" />
-              <FTextField name="country" label="Country" />
+              <FTextField name="phone1" label="phone1" />
+              <FTextField name="phone2" label="phone2" />
             </Box>
 
             <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
-              <FTextField name="coverUrl" label="Home Profile Cover Image" />
-              <FTextField name="aboutMe" multiline rows={4} label="About Me" />
+              
 
               <LoadingButton
                 type="submit"
@@ -130,6 +127,7 @@ function AccountPage() {
         </Grid>
       </Grid>
     </FormProvider>
+  </Box>
   );
 }
 

@@ -144,14 +144,14 @@ function AuthProvider({ children }) {
     callback();
   };
 
-  const register = async ({ name, email, password,phone1,phone2,role }, callback) => {
+  const register = async ({ name, email, password,phone1,phone2,position }, callback) => {
     const response = await apiService.post("/users", {
       name,
       email,
       password,
       phone1,
       phone2,
-      role
+      position
     });
 
     const { user, accessToken } = response.data;

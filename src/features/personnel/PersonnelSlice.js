@@ -45,10 +45,10 @@ const slice = createSlice({
           state.isLoading = false;
           state.error = null;
 
-          const { teams } = action.payload;
+          const { team } = action.payload;
           state.totalTeamm += 1;
-          state.teamsById[teams._id] = teams
-          state.currentPageTeams.unshift(teams._id);
+          state.teamsById[team._id] = team
+          state.currentPageTeams.unshift(team._id);
         },
         deleteTeam(state,action) {
           state.isLoading = false;
@@ -76,6 +76,7 @@ const slice = createSlice({
 
           const { user } = action.payload;
           state.totalUsers += 1;
+          if(!user.team){state.userNoTeam.unshift(user) }
           state.usersById[user._id] = user
           state.currentPageUsers.unshift(user._id);
         },
@@ -96,6 +97,14 @@ const slice = createSlice({
           const updatedUser = action.payload;
           state.updatedProfile = updatedUser;
         },
+        putTeam(state,action) {
+          state.isLoading = false;
+          state.error = null;
+          
+          const {teamId,editTeam} = action.payload
+          
+          state.teamsById[teamId] = editTeam
+        }
     }
 
 }) 
@@ -117,12 +126,16 @@ async (dispatch) => {
 }
 
  export const postNewUser =
-  ({ name, email, password,phone1,phone2,role,team }) =>
+  ({ name, email, password,phone1,phone2,position,teamId }) =>
   async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await apiService.post("/users", { name, email, password,phone1,phone2,role,team });
+      const response = await apiService.post("/users", { name, email, password,phone1,phone2,position,teamId });
       dispatch(slice.actions.postUser(response.data));
+      dispatch(slice.actions.putTeam({
+        teamId:response.data.team._id,
+        editTeam:response.data.team}
+        ));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
       toast.error(error.message);
@@ -135,7 +148,9 @@ export const removeTeam =
     dispatch(slice.actions.startLoading());
     try {
       await apiService.delete(`/teams/${id}`);
+      const responseUser = await apiService.get("/users");
       dispatch(slice.actions.deleteTeam({id}));
+      dispatch(slice.actions.getUsersSuccess(responseUser.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
       toast.error(error.message);
@@ -159,17 +174,39 @@ export const getUsers =
   };
 
   export const postNewTeam =
-  ({ name }) =>
+  ({ name,manager,workers}) =>
   async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await apiService.post("/teams", { name });
-      dispatch(slice.actions.postTeam(response.data));
+      const responseTeam = await apiService.post("/teams", { name,manager,workers });
+      const responseUser = await apiService.get("/users");
+      console.log(responseTeam.data)
+      dispatch(slice.actions.postTeam(responseTeam.data));
+      dispatch(slice.actions.getUsersSuccess(responseUser.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
       toast.error(error.message);
     }
   };
+
+  export const editTeam = ({name,manager,workers, teamId}) => async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    
+    try {
+      const response = await apiService.put(`/teams/${teamId}`,{name,manager,workers});
+      const responseUser = await apiService.get("/users");
+      console.log(response.data)
+      dispatch(slice.actions.putTeam({
+        teamId,
+        editTeam:response.data}
+        ));
+      dispatch(slice.actions.getUsersSuccess(responseUser.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      toast.error(error.message);
+    }
+  };
+
 
   export const removeUser =
   ({id}) =>

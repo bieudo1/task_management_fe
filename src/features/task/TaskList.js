@@ -1,37 +1,37 @@
 import React,{useState} from "react";
-import { Typography,Modal,Button ,Box} from "@mui/material";
-import { fDate } from "../../utils/formatTime";
-import ScrollBar from "../../components/ScrollBar";
+import { Typography,Modal} from "@mui/material";
 import { Droppable } from "react-beautiful-dnd";
-import {style} from "../../app/config"
 import TaskCard from "./TaskCard";
 import ReviewTask from "./ReviewTask";
+import FileTask from "./FileTask";
 
 
 
 function TaskList({tasks,status }) {
   const [openReviewTask, setOpenReviewTask] = useState(false);
   const [openFileTask, setOpenFileTask] = useState(false);
+  const [projectId, setProjectId] = useState("");
   const [taskId, setTaskId] = useState("");
   const [review, setReview] = useState([])
-  const [reviewAt, setReviewAt] = useState([])
-  const handleBlur = (e,value) => {
-    console.log(value)
-  };
+  const [files, setFiles] = useState([]);
 
-  const handleOpenReviewTask = (id,review,reviewAt) =>{
+//progress
+  const handleOpenReviewTask = (id,review) =>{
     setOpenReviewTask(true)
-    setReviewAt(reviewAt)
     setReview(review)
     setTaskId(id)
   }
 
   const handleCloseReviewTask = () =>{
     setOpenReviewTask(false)
+    setTaskId("")
   }
 
-  const handleOpenFileTask = (id) =>{
+  const handleOpenFileTask = (id,files,projectId) =>{
     setOpenFileTask(true)
+    setProjectId(projectId)
+    setFiles(files)
+    setTaskId(id)
   }
 
   const handleCloseFileTask = () =>{
@@ -40,37 +40,52 @@ function TaskList({tasks,status }) {
 
   return (
     <>
-        <Droppable key={status} droppableId={status} >
+
+        <Droppable droppableId={status} >
           {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef}>
               {tasks.map((task,index) =>(
                <TaskCard 
-               key={task.id} 
                status={status}
                task={task} index={index} 
                handleOpenFileTask={handleOpenFileTask} 
                handleOpenReviewTask={handleOpenReviewTask} 
                />
               ))}
-              <Typography sx ={{height:50}}>new</Typography>
+              <Typography sx ={{height:50}}></Typography>
               {provided.placeholder}
             </div>
           )}
         </Droppable>
-        <Box>
+
           <Modal
             open={openReviewTask}
             onClose={handleCloseReviewTask}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
+            <div>
               <ReviewTask 
               taskId={taskId}
               reviewList={review}
-              reviewAt={reviewAt}
               handleCloseReviewTask={handleCloseReviewTask}/>
+            </div>
           </Modal>
-        </Box>
+
+          <Modal
+            open={openFileTask}
+            onClose={handleCloseFileTask}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <div>
+              <FileTask
+              taskId={taskId}
+              projectId={projectId}
+              filesList={files}
+              handleCloseFileTask={handleCloseFileTask}/>
+            </div>
+          </Modal>
   </>
 );
 }

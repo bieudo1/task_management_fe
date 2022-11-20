@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Typography,Link,
   List,Avatar,
@@ -8,7 +8,6 @@ import { fDate } from "../../utils/formatTime";
 import { useDispatch, useSelector } from "react-redux";
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
-import { Link as RouterLink } from "react-router-dom";
 import InsertDriveFileRoundedIcon from '@mui/icons-material/InsertDriveFileRounded';
 import {getFiles} from "./FileSlice"
 import LoadingScreen from "../../components/LoadingScreen";
@@ -42,10 +41,10 @@ function File ({projectId}) {
                             <Link
                                 variant="subtitle2"
                                 sx={{ fontWeight: 600 }}
-                                component={RouterLink}
-                                to={`${file.link}`}
+                                // component={RouterLink}
+                                // to={`${file.FileUrl}`}
                             >
-                                {file.link}
+                                <Typography>{file.FileUrl}</Typography>
                             </Link>
                             <Typography>{file.author.name}</Typography>
                             <Typography>{fDate(file.updatedAt)}</Typography>

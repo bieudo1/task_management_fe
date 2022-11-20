@@ -1,4 +1,4 @@
-import React, { useEffect ,useState} from "react";
+import React, { useEffect } from "react";
 import { Box, Container,Paper,Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { experimentalStyled as styled } from '@mui/material/styles';
@@ -10,6 +10,8 @@ import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import { getCount } from "./adminSlice";
 import LoadingScreen from "../../components/LoadingScreen";
 import PieChart from "./PieChart";
+import {FormProvider, FSelect } from "../../components/form";
+import { useForm } from "react-hook-form";
 import BarChartCount from "./BarChartCount";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -20,15 +22,33 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+const defaultValues = {
+  date: 7,
+};
 
+const dateOption = [
+  { value:7, label: "7 ngày"},
+  { value:12, label: "12 ngày"},
+  { value:30, label: "30 ngày"},
+]
 
 function Admin() {
   const {projectCount, teamCount,userCount,taskCount,countOutOfDate,countOnTime,isLoading } = useSelector(
     (state) => state.admin,
   );
     const statur = Object.values(taskCount)
-    console.log(countOutOfDate)
-    console.log(countOnTime)
+ 
+
+
+
+    const methods = useForm({
+      defaultValues
+    });
+
+    const {
+      watch,
+    } = methods;
+
   const dispatch = useDispatch();
   const listCount = [
     {
@@ -49,11 +69,14 @@ function Admin() {
       icon:<GroupIcon/>
     }
   ]
+  const watchDate = watch("date"); 
+  console.log(watchDate)
+
   useEffect(() => {
-    dispatch(getCount());
-  }, [dispatch]);
+    dispatch(getCount({watchDate}));
+  }, [dispatch,watchDate]);
   return (
-    <Container>
+    <Container sx = {{margin:"64px"}}>
       {isLoading ?(
         <LoadingScreen />
       ) : (
@@ -74,17 +97,27 @@ function Admin() {
            ))}
           </Grid>
         </Box>
-        <Grid container spacing={{ xs: 4, md: 3 }} columns={{ xs: 6, sm: 8, md: 12 }}>
-        <Grid xs={5} sm={3} md={3} >
+        <Grid container spacing={{ xs: 5, md: 4 }} columns={{ xs: 6, sm: 8, md: 12 }}>
+        <Grid xs={5} sm={4} md={4} >
         <Box sx = {{marginTop: "16px"}}>
-          <div style = {{width : 400}}>
+          <div style = {{width : 350}}>
             <PieChart statur = {statur}/>
           </div>
         </Box>
         </Grid>
-        <Grid xs={5} sm={3} md={3}>
+        <Grid xs={7} sm={4} md={4}>
         <Box sx = {{marginTop: "16px"}}>
-          <div style = {{width : 400}}>
+      <FormProvider methods={methods}>
+        <FSelect 
+                name="date" 
+                label= "date"
+                size="small" sx={{ width: 300 }}>
+                {dateOption.map(date=>(
+                  <option key={date.value} value={date.value}>{date.label}</option>
+                ))}
+              </FSelect>
+              </FormProvider>
+          <div style = {{width : 700}}>
             <BarChartCount countOnTime = {countOnTime} countOutOfDate={countOutOfDate}/>
           </div>
         </Box>

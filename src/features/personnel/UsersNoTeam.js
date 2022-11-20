@@ -1,16 +1,11 @@
 import React from "react";
 import {
-  Table,
-  TableHead,
+  Typography,
   Avatar,
-  TableRow,
-  TableBody,
-  TableCell,
   List,
-  TableContainer,
   Box,
 } from "@mui/material";
-import useAuth from "../../hooks/useAuth";
+import ListItem from '@mui/material/ListItem';
 import { useSelector } from "react-redux";
 
 
@@ -23,13 +18,22 @@ function UsersNoTeam() {
 
   return(
     <>
-        <List>
+    <Typography variant="h4" sx={{ mb: 3 }}>
+    User No Team
+  </Typography>
+        <List sx={{overflowX:"hidden",overflowY:"auto"}}>
         {userNoTeam.map((user) =>(
+          <ListItem key={user._id}>
             <Avatar
             alt={user.name}
             src={user.imageUrl}
-            sx = {{width:30,height:30}}
+            sx = {{width:40,height:40}}
           />
+          <Box sx = {{p:1}}>
+          <Typography>name: {user.name}</Typography>
+          <Typography>position: {user.position}</Typography>
+          </Box>
+          </ListItem>
         ))}
         </List>
     </>

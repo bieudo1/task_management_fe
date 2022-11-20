@@ -1,12 +1,10 @@
 import React, { useEffect,useState } from "react";
 import {
   Box,
-  Link,
-  Card,Modal,
+  Modal,
   Container,
   Stack,
   Typography,
-  CardHeader,
   Button,
   Grid
 } from "@mui/material";
@@ -17,18 +15,9 @@ import ProjectCard from "./ProjectCard";
 import useAuth from "../../hooks/useAuth";
 import NewProject from "./NewProject";
 import EditProject from "./EditProject";
+import { style } from "../../app/config";
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
+
 
 function Projects () {
   const { user } = useAuth();
@@ -87,7 +76,9 @@ function Projects () {
   return (
     <Container sx = {{margin:"64px"}}>
       <>
+      {user.position !=="Worker"  && 
         <Button onClick={() =>handleOpenNewProject()}>New Project</Button>
+      }
         <Modal
           open={openNewProject}
           onClose={handleCloseNewProject}
@@ -102,14 +93,7 @@ function Projects () {
       {isLoading || !listProjects ? (
         <LoadingScreen />
       ) : (
-        <Container  x={{
-          position: "relative",
-          top:"64px",
-          left:"19%",
-          paddingTop: "64px",
-          backgroundColor: "#f7f7f7",
-          height:"auto",
-        }}>
+        <Container >
           
     <Grid container spacing={3} my={1}>
           {listProjects.map((project) => (
@@ -124,29 +108,37 @@ function Projects () {
         </Grid>
         </Container>
       )}
-      <Modal
-            open={openRemoveProjects}
-            onClose={handleCloseRemoveProjects}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
+        <Modal
+          open={openRemoveProjects}
+          onClose={handleCloseRemoveProjects}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
           >
-            <Box sx={style}>
-              <Button onClick={() =>handleRemoveProject(projectId)}>Yes</Button>
+          <div>
+          <Box sx={style}>
+            <Typography>bạn có muốn xóa không ?</Typography>
+            <Box>
+              <Button sx={{color:"red"}} onClick={() =>handleRemoveProject(projectId)}>Yes</Button>
 
-              <Button onClick={() =>handleCloseRemoveProjects()}>No</Button>
+              <Button sx={{color:"green"}} onClick={() =>handleCloseRemoveProjects()}>No</Button>
             </Box>
-          </Modal>
+          </Box>
+              
+      </div>
+        </Modal>
 
-           <Modal
-            open={openEditProject}
-            onClose={handleCloseEditProject}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
+        <Modal
+          open={openEditProject}
+          onClose={handleCloseEditProject}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
           >
-             <EditProject
-              handleCloseEditProject={handleCloseEditProject} 
-              projectId={projectId}/> 
-          </Modal> 
+          <div>
+         <EditProject
+            handleCloseEditProject={handleCloseEditProject} 
+            projectId={projectId}/> 
+      </div>
+        </Modal> 
     </Container>
   );
 };

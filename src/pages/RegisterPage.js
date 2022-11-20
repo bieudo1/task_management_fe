@@ -58,7 +58,7 @@ function RegisterPage() {
   const onSubmit = async (data) => {
     const { name, email, password,phone1,phone2 } = data;
     try {
-      await auth.register({ name, email, password,phone1,phone2,role:"Ceo" }, () => {
+      await auth.register({ name, email, password,phone1,phone2,position:"Ceo" }, () => {
         navigate("/", { replace: true });
       });
     } catch (error) {

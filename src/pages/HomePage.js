@@ -13,11 +13,14 @@ import Admin from "../features/admin/Admin";
 import { useSelector } from 'react-redux';
 import ProjectProfilePage from "../features/project/ProjectProfilePage";
 import Personnel from "../features/personnel/Personnel";
+import { useLocation } from "react-router-dom";
 import { drawerWidth} from "../app/config";
 
 
 function HomePage() {
   const {openItem,drawerOpen,targetProjectId} = useSelector((state) => state.menu);
+  
+  const location= useLocation()
   
   const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
@@ -40,30 +43,30 @@ function HomePage() {
 
   const PROFILE_TABS = [
     {
-      value: "Task",
+      value: "/Task",
       icon: <TaskIcon sx={{ fontSize: 24 }} />,
       component: <Task/>,
     },
     {
-      value: "Project",
+      value: "/Project",
       icon: <AccountTreeIcon sx={{ fontSize: 24 }} />,
       component: <Projects/>,
     },
     {
-      value: "TaskTeam",
+      value: "/TaskTeam",
       icon: <AccountTreeIcon sx={{ fontSize: 24 }} />,
       component: <TaskTeam/>,
     },
     {
-      value: "SingleProject",
+      value: "/SingleProject",
       component: <ProjectProfilePage projectId={targetProjectId}/>,
     },
     {
-      value: "Admin",
+      value: "/Admin",
       component: <Admin/>,
     },
     {
-      value: "Personnel",
+      value: "/Personnel",
       component: <Personnel/>,
     },
   ];
@@ -82,7 +85,7 @@ function HomePage() {
         maxWidth: "100%"
       }} >
         {PROFILE_TABS.map((tab) => {
-          const isMatched = tab.value === openItem.toString();
+          const isMatched = tab.value === location.pathname.toString();
           return isMatched && <Box sx = {{heght:"50%"}} key={tab.value}>{tab.component}</Box>;
         })}
       </Container>

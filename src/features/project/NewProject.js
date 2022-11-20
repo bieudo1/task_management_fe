@@ -2,9 +2,7 @@ import React, { useState,useEffect } from "react";
 import {
   Button,alpha,
   Stack,Card,
-  Alert,Box,
-  IconButton,
-  InputAdornment,
+  Alert,
   Container,List,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
@@ -120,7 +118,7 @@ function NewProject({handleCloseNewProject}) {
                 ))}
               </FSelect>
               {(selectedUser.lenght !== 0 )&& 
-              <List>
+              <List sx ={{display: "flex",overflowX:"auto",overflowY:"auto"}}>
                 {selectedUser.map( user => (
                 <ListItem key= {user.value} >
                   <p>{user.label}</p>
@@ -135,13 +133,19 @@ function NewProject({handleCloseNewProject}) {
             size="large"
             type="submit"
             variant="contained"
+            sx={{marginRight: "10px"}}
             loading={isSubmitting}
           >
             Create
           </LoadingButton>
+          <Button 
+            type="submit"
+            variant="contained" 
+            onClick={() =>handleCloseNewProject()}>
+              Cancel
+          </Button>
         </Stack>
       </FormProvider>
-        <Button onClick={() =>handleCloseNewProject()}>Cancel</Button>
         </Card>
     </Container>
   );

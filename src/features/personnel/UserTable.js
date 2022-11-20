@@ -11,12 +11,10 @@ import {
   Box,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
+
 
 
 function UserTable({ users,handleOpenRemoveUser }) {
-  const { user } = useAuth();
-  const currentUserId = user._id;
 
 
   return (

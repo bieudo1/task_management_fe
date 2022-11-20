@@ -42,7 +42,8 @@ function Task() {
   }, [dispatch]);
 
   const { user } = useAuth();
-  const { tasksMineList,tasksMineById,currentTasksMine,isLoading } = useSelector(
+
+  const { statusArchive,tasksById,currentPageTasks,isLoading } = useSelector(
     (state) => state.task
   );
 
@@ -50,7 +51,7 @@ const listStatus = ["working","review","rework","done"]
 
 const processingListTask =  () => {
 
-  const tasks = currentTasksMine.map((taskId) => tasksMineById[taskId]);
+  const tasks = currentPageTasks.map((taskId) => tasksById[taskId]);
   
   const newTask =  status.map((s) => (
     tasks.filter((task) => task.status === s.text)
@@ -65,7 +66,7 @@ const [task,setTask] = useState(processingListTask())
 useEffect(() =>{
  let x = processingListTask()
  setTask(x)
-},[tasksMineList.length])
+},[currentPageTasks.length])
 
 
 const removeFromList = (list, index) => {
@@ -82,11 +83,22 @@ const removeFromList = (list, index) => {
   
   const onDragEnd = (result) => {
     console.log(result)
-    const {destination,draggableId} = result;
+    const {destination,draggableId,source} = result;
+    console.log(source.droppableId)
+    console.log(destination.droppableId)
     const status = destination.droppableId;
     const taskId = draggableId;
     if (!result.destination) {
       return;
+    }
+    if(user.position ==="Worker"  ) {
+      if((source.droppableId === "working" || source.droppableId === "rework")  && 
+          destination.droppableId !=="review"){
+        return;
+      }
+      if(source.droppableId === "review" || source.droppableId === "done" ){
+        return;
+      }
     }
 
     dispatch(getUpDateTaskStatus({taskId,status}))
@@ -107,10 +119,10 @@ const removeFromList = (list, index) => {
     );
     setTask(listCopy)
   };
-
+//<Container sx = {{margin:"64px"}}>
   return (
-    <Container sx = {{position: "relative", right: "3%"}}>
-      {isLoading || !tasksMineList ? (
+    <Container sx = {{position: "relative", lest: "10%",margin:"64px"}}>
+      {isLoading && statusArchive.length !== 0? (
         <LoadingScreen />
       ) : (
         <>
@@ -118,10 +130,10 @@ const removeFromList = (list, index) => {
       <Card sx={{ p: 3}}>
         <List sx ={{display: "flex",
         justifyContent: "flex-start",
-        overflowX:"auto",overflowY:"hidden",
+        overflowX:"auto",overflowY:"auto",
         alignItems: "flex-start",height:500 }}>
-          {status.map((status,index) =>(
-            <ListItem key={index}>
+          {status.map((status) =>(
+            <ListItem key={status.text}>
               <Box sx = {{pd: 3}}>
                 <Box sx = {{padiing:"8px"}}>
                   <Typography sx={{color:"#ffff",backgroundColor:`${status.background1}`,
@@ -129,8 +141,8 @@ const removeFromList = (list, index) => {
                   ,padding:"0 10px"}}>{status.text}</Typography>
                   </Box>
                   <Box id={status.text} sx={{backgroundColor:`${status.background2}`,
-                  width:"270px",height:"auto"
-                  ,padding: "10px 20px"}}
+                  width:"270px",height:"auto",padding: "10px 20px",
+                }}
                   >
                  <TaskList 
                   tasks = {task[status.text]}

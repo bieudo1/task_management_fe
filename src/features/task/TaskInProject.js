@@ -7,27 +7,19 @@ import {
   Box,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import LoadingScreen from "../../components/LoadingScreen";
-import { getTaskInProject, removTask } from "./TaskSlice";
+import { getTaskInProject, getUpDateTaskStatus, removTask } from "./TaskSlice";
 import ListItem from '@mui/material/ListItem';
 import AllTask from "./AllTask"
 import EditTask from "./EditTask";
 import TaskInProjectCard from "./TaskInProjectCard";
+import useAuth from "../../hooks/useAuth";
+import { style } from "../../app/config";
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
+
 
 function TaskInProject( {projectId}) {
-  const {currentPageTasks,tasksById,isLoading } = useSelector((state) => state.task);
+  const {currentPageTasks,tasksById } = useSelector((state) => state.task);
+  const { user } = useAuth();
    
   const {assignee} = useSelector((state) => state.project);
   const dispatch = useDispatch();
@@ -69,6 +61,7 @@ function TaskInProject( {projectId}) {
     };
 
     const handleStatusArchive = (id) =>{
+      dispatch(getUpDateTaskStatus({taskId:id,status:"archive"}))
 
     }
 
@@ -80,7 +73,7 @@ function TaskInProject( {projectId}) {
     return(
       <Container>
         <Box>
-        <Button onClick={() => handleOpenAllTasks()}>allTask</Button>
+         {(user.position !== "Worker") && <Button onClick={() => handleOpenAllTasks()}>allTask</Button>}
           <Modal
               open={allTask}
               onClose={handleCloseAllTasks}
@@ -116,9 +109,12 @@ function TaskInProject( {projectId}) {
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              <Button onClick={() =>handleRemoveTask(taskId)}>Yes</Button>
+            <Typography>bạn có muốn xóa không ?</Typography>
+            <Box>
+              <Button sx={{color:"red"}} onClick={() =>handleRemoveTask(taskId)}>Yes</Button>
 
-              <Button onClick={() =>handleCloseRemoveTask()}>No</Button>
+              <Button sx = {{color:"green"}} onClick={() =>handleCloseRemoveTask()}>No</Button>
+              </Box>
             </Box>
           </Modal>
 

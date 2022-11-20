@@ -6,7 +6,6 @@ import {
   Box,Modal,Button,
   TablePagination,
 } from "@mui/material";
-import {Link} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers,removeUser } from "./PersonnelSlice";
 import UserTable from "./UserTable";
@@ -14,25 +13,14 @@ import LoadingScreen from "../../components/LoadingScreen";
 import SearchInput from "../../components/SearchInput";
 import { useLocation } from "react-router-dom";
 import NewUser from "./NewUser";
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
+import { style } from "../../app/config";
 
 function User() {
   const location= useLocation()
   
   let params = new URLSearchParams(location.search);
 
-  let filterName = params.get("q");
+  let filterName = params.get("user");
 
   const [page, setPage] = useState(0);
   const [openNewUser, setOpenNewUser] = useState(false);
@@ -89,13 +77,14 @@ function User() {
 
   return (
     <>
+    <Typography variant="h4" sx={{ mb: 3 }}>
+      User
+    </Typography>
+    <Button onClick={() =>handleOpenNewUser()}>New User</Button>
     { isLoading || !users ? (
-      <LoadingScreen/>
+      <LoadingScreen />
     ):(
-    <> <Typography variant="h4" sx={{ mb: 3 }}>
-          User
-        </Typography>
-          <Button onClick={() =>handleOpenNewUser()}>New Staff</Button>
+    <> 
         <Modal
             open={openNewUser}
             onClose={handleCloseNewUser}
@@ -109,7 +98,7 @@ function User() {
       <Card sx={{ p: 3 }}>
         <Stack spacing={2}>
           <Stack direction={{ xs: "column", md: "row" }} alignItems="center">
-            <SearchInput />
+            <SearchInput type={"user"}/>
           
             <Typography
               variant="subtitle"
@@ -148,9 +137,12 @@ function User() {
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              <Button onClick={() =>handleRemoveUser(userId)}>Yes</Button>
+            <Typography>bạn có muốn xóa không ?</Typography>
+            <Box>
+              <Button sx={{color:"red"}} onClick={() =>handleRemoveUser(userId)}>Yes</Button>
 
-              <Button onClick={() =>handleCloseRemoveUser()}>No</Button>
+              <Button sx={{color:"green"}} onClick={() =>handleCloseRemoveUser()}>No</Button>
+              </Box>
             </Box>
           </Modal>
         </Stack>
