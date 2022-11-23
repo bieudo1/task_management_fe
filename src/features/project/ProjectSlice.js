@@ -93,10 +93,12 @@ const slice = createSlice({
 }) 
 export default slice.reducer;
 
-export const getProjects = () =>async (dispatch) => {
+export const getProjects = ({ filterName, page = 1, limit = 12 }) =>async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await apiService.get("/projects/");
+      const params = { page, limit };
+      if (filterName) params.name = filterName;
+      const response = await apiService.get(`/projects/`,{params});
       console.log(response.data)
       dispatch(slice.actions.getProjectsList(response.data));
     } catch (error) {

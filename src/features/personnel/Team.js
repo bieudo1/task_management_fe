@@ -161,13 +161,16 @@ function Team() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >   
-        <Stack spacing={3}>
-          <NewTeam 
-            workerList={workerList}
-            managerList={managerList}
-            handleCloseNewTeam={handleCloseNewTeam}
-          />
-        </Stack>
+        <Box sx={style}> 
+          <Stack spacing={3}>
+            <NewTeam 
+              userNoTeam={userNoTeam}
+              workerList={workerList}
+              managerList={managerList}
+              handleCloseNewTeam={handleCloseNewTeam}
+            />
+          </Stack>
+        </Box>
       </Modal>
 
       <Modal
@@ -175,15 +178,18 @@ function Team() {
         onClose={handleCloseEditTeam}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-      >   
-        <Stack spacing={3}>
-          <EditTeam 
-            teamId={teamId}
-            workerList={workerList}
-            managerList={managerList}
-            handleCloseEditTeam={handleCloseEditTeam}
-          />
-        </Stack>
+      >  
+          <Box sx={style}> 
+            <Stack spacing={3}>
+              <EditTeam 
+                teamId={teamId}
+                userNoTeam={userNoTeam}
+                workerList={workerList}
+                managerList={managerList}
+                handleCloseEditTeam={handleCloseEditTeam}
+              />
+            </Stack>
+          </Box>
       </Modal>
  
     </Container>

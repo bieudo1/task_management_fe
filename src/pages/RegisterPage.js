@@ -18,7 +18,9 @@ import { FormProvider, FTextField } from "../components/form";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-
+const phoneRegex = RegExp(
+  /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/
+);
 const RegisterSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -26,8 +28,8 @@ const RegisterSchema = Yup.object().shape({
   passwordConfirmation: Yup.string()
     .required("Please confirm your password")
     .oneOf([Yup.ref("password")], "Passwords must match"),
-    phone1: Yup.number(),
-    phone2: Yup.number(),
+    phone1: Yup.string().matches(phoneRegex, "Invalid phone").required("Phone is required"),
+    phone2: Yup.string().matches(phoneRegex, "Invalid phone").required("Phone is required"),
 });
 
 const defaultValues = {

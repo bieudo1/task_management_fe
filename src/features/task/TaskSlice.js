@@ -64,11 +64,12 @@ const slice = createSlice({
           state.isLoading = false;
           state.error = null;
     
-          const {taskId, editTask} = action.payload;
+          const {taskId, editTask,progress} = action.payload;
           
           if(editTask.status === "archive"){
             state.statusArchive.unshift(editTask);
           }
+          if(progress){ state.tasksById[taskId].progress = progress}
           state.tasksById[taskId]= editTask;
         },
     }
@@ -163,6 +164,7 @@ export const getTasksMine =
   ({name, assignee, dueAt,important,urgent,taskId}) =>
   async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    console.log(assignee)
     try {
       const response =await apiService.put(`/tasks/${taskId}`,{name, assignee, dueAt,important,urgent});
       dispatch(slice.actions.removeEditSuccess({
@@ -197,6 +199,7 @@ export const getTasksMine =
       const response =await apiService.put(`/tasks/${taskId}`,{progress});
       console.log(response)
       dispatch(slice.actions.removeEditSuccess({
+        progress,
         taskId,
         editTask: response.data,
       }));

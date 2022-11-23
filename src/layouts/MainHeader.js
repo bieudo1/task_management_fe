@@ -217,7 +217,7 @@ function MainHeader() {
     if (user.position ==="Ceo" ){
         setAdmin(Personnel.concat(CEO))
       }
-    if(user.team.name === "Personnel"){
+    if(user.team?.name === "Personnel"){
       setAdmin(Personnel)
     }
   },[])

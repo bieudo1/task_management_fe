@@ -90,10 +90,12 @@ function User() {
             onClose={handleCloseNewUser}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
-          >   
+          > 
+          <Box sx={style}> 
             <Stack spacing={3}>
             <NewUser handleCloseNewUser={handleCloseNewUser}/>
-        </Stack>
+            </Stack>
+          </Box>
           </Modal>
       <Card sx={{ p: 3 }}>
         <Stack spacing={2}>

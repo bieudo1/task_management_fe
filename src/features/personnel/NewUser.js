@@ -18,33 +18,31 @@ import { FormProvider, FTextField,FSelect } from "../../components/form";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-
+const phoneRegex = RegExp(
+  /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/
+);
 const RegisterSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string().required("Password is required"),
     position: Yup.string(),
-    phone1: Yup.number(),
+    phone1: Yup.string().matches(phoneRegex, "Invalid phone").required("Phone is required"),
+    phone2: Yup.string().matches(phoneRegex, "Invalid phone"),
 });
-
-const FILTER_POSITION  = [
-  {value: "Manager", label:"Manager"},
-  {value: "Worker", label:"Worker"},
-];
 
 
 const defaultValues = {
   name: "",
   email: "",
   password: "",
-  team:"",
-  position:"Manager",
+  team:null,
+  position:"Worker",
   phone1:"",
   phone2:"",
 };
 
 function NewUser({handleCloseNewUser}) {
-  const user0 = [{value:"",label:"",}]
+  const user0 = [{value:null,label:"",}]
     const {teamOptions} = useSelector(
         (state) => state.personnel
       );
@@ -66,8 +64,6 @@ function NewUser({handleCloseNewUser}) {
 
   const onSubmit = async (data) => {
     let { name, email, password,phone1,phone2,position,team } = data;
-    if(!team) (team = teamOptions[0].value )
-    console.log(phone1,phone2,position,team)
     try {
       dispatch(postNewUser({ name, email, password,phone1,phone2,position,teamId:team }));
       handleCloseNewUser()
@@ -104,17 +100,6 @@ function NewUser({handleCloseNewUser}) {
               ),
             }}
           />
-          <FSelect
-          name="position"
-          label= "position"
-          size="small" sx={{ width: 300 }}
-          >
-          {FILTER_POSITION.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-            </option>
-        ))}
-        </FSelect>
         
         <FSelect
           name="team"

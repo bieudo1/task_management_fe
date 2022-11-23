@@ -48,13 +48,13 @@ function TaskTeamTable({ tasks }) {
                       cursor: "pointer",
                     }}
                   >
-                    {task.name}
+                    {task?.name}
                   </TableCell>
                   <TableCell
                     align="left"
                     sx={{ display: { xs: "none", md: "table-cell" } }}
                   >
-                    {task.project.name}
+                    {task.project?.name}
                   </TableCell>
                   <TableCell
                     align="left"

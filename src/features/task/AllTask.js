@@ -122,10 +122,10 @@ function AllTask({projectId,assignee,handleCloseAllTasks}) {
             >
               All Task
             </LoadingButton>
+            <Button onClick={() =>handleCloseAllTasks()}>Cancel</Button>
           </Box>
         </Stack>
       </FormProvider>
-      <Button onClick={() =>handleCloseAllTasks()}>Cancel</Button>
     </Card>
   );
 }

@@ -124,11 +124,13 @@ function TaskInProject( {projectId}) {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
+            <Box sx={style}>
             <EditTask 
               handleCloseEditTask={handleCloseEditTask} 
               projectId={projectId}
               assignee={assignee}
               taskId={taskId}/>
+            </Box>
           </Modal>
           </>
         )}

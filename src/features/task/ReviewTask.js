@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { reviewTask } from "./TaskSlice";
 
 function ReviewTask({ taskId ,reviewList,handleCloseReviewTask }) {
-
+  const [list,setList] = useState(reviewList)
   const [review, setReview] = useState("");
   const dispatch = useDispatch();
 
@@ -18,6 +18,7 @@ function ReviewTask({ taskId ,reviewList,handleCloseReviewTask }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setList([ ...list,review])
     dispatch(reviewTask({ taskId, review }));
     setReview("");
   };
@@ -25,7 +26,7 @@ function ReviewTask({ taskId ,reviewList,handleCloseReviewTask }) {
   return (
     <Card sx={{ p: 3 ,m:3}}>
       <List sx = {{overflowX:"hidden",overflowY:"auto",height:250}}>
-        {reviewList.map((review,index) => (
+        {list.map((review,index) => (
           <ListItem key={index} sx={{flexDirection: "column",alignItems: "flex-start"}}>
               <Typography>{review}</Typography>
           </ListItem>

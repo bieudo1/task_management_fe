@@ -100,6 +100,15 @@ const removeFromList = (list, index) => {
         return;
       }
     }
+    if(user.position ==="Manager"){
+      if(
+      destination.droppableId ==="working" ||
+      (source.droppableId === "rework" && destination.droppableId === "done") ||
+      source.droppableId === "done"
+      ){
+        return;
+      }
+    }
 
     dispatch(getUpDateTaskStatus({taskId,status}))
 

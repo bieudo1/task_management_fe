@@ -112,7 +112,9 @@ function NewProject({handleCloseNewProject}) {
               <FSelect 
                 name="member" 
                 label= "member"
-                size="small" sx={{ width: 300 }}>
+                size="small"
+                fullWidth
+            >
                 {users.map(user=>(
                   <option key={user.value} value={user.value}>{user.label}</option>
                 ))}

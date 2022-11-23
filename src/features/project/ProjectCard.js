@@ -5,10 +5,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import { useDispatch} from "react-redux";
+import useAuth from "../../hooks/useAuth";
 import { activeItem } from '../../app/menu';
 
 
 function ProjectCard({ project,handleOpenRemoveProjects,handleOpenEditProject }) {
+  const { user } = useAuth();
+
     const { _id: targetProjectId,assigner,assignee,name,description } = project;
     const dispatch = useDispatch();
     const handleClickLink = (e,openItem) => {
@@ -43,6 +46,9 @@ function ProjectCard({ project,handleOpenRemoveProjects,handleOpenEditProject })
               display: "flex",
               flexDirection: "column"
               }}>
+              {user.position !== "Worker" && 
+              
+              <Box>
               <Button onClick={() => handleOpenRemoveProjects(targetProjectId)}>
                 <DeleteIcon sx ={{ width: "0.7em",height: "0.7em"}}/>
               </Button>
@@ -50,6 +56,8 @@ function ProjectCard({ project,handleOpenRemoveProjects,handleOpenEditProject })
               <Button onClick={() => handleOpenEditProject(targetProjectId)}>
                 <EditIcon sx ={{ width: "0.7em",height: "0.7em"}}/>
               </Button>
+              </Box>
+              }
             </Box>
           </Box>
           <Box >

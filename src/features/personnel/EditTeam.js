@@ -26,20 +26,27 @@ const RegisterSchema = Yup.object().shape({
 
 
 
-function EditTeam({ teamId,workerList, managerList,handleCloseEditTeam }) {
+function EditTeam({ teamId,workerList,handleCloseEditTeam,userNoTeam }) {
+
+  userNoTeam = userNoTeam.map((user) =>({value: user._id,label: user.name}))
+
   const {teamsById} = useSelector(
     (state) => state.personnel,
   );
-  let oldUser = []
-  teamsById[teamId].workers.forEach(user => 
-      oldUser= [...oldUser, ...workerList.filter(u => u.value === user._id)]
-    )  
-    const user0 = [{value:"",label:"",}]
-    const [workers, setWorkers] = useState(oldUser.map(user => user.value))
-    const [selectedUser, setSelectedUser] = useState(oldUser)
-    const [workerOption, setWorkerOption] = useState(user0.concat(workerList.filter(x => !oldUser.includes(x))))
-    const dispatch = useDispatch();
+
+  const oldUser = teamsById[teamId].workers.map((team) =>({value: team._id,label: team.name}))
   
+    const userManager =[{value:teamsById[teamId].manager._id,label:teamsById[teamId].manager.name}]
+    const user0 = [{value:"",label:"",}]
+    const [userValue, setUserValue] = useState(userNoTeam.map(us => us.value))
+    const [managerValue,setManagerValue] = useState(userNoTeam.map(us => us.value))
+    const [managerList,setManagerList] = useState(userManager.concat(userNoTeam))
+    const [worker, setWorker] = useState(oldUser.map(user => user.value))
+    const [selectedUser, setSelectedUser] = useState(oldUser)
+    const [workerOption, setWorkerOption] = useState(userNoTeam)
+    const dispatch = useDispatch();
+    
+ 
     const defaultValues = {
       name: teamsById[teamId].name,
       manager: teamsById[teamId].manager._id,
@@ -60,24 +67,45 @@ function EditTeam({ teamId,workerList, managerList,handleCloseEditTeam }) {
   } = methods;
 
   const handleDeleteSelect = (id) => {
-    setWorkers(workers.filter(a => a !== id))
+    setWorker(worker.filter(a => a !== id))
     setWorkerOption([...workerOption, ...selectedUser.filter(u => u.value === id)])
+    setManagerList([...managerList,...selectedUser.filter(u => u.value === id)])
+    setUserValue([...userValue,id])
+    setManagerValue([...managerValue,id])
     setSelectedUser(selectedUser.filter(u => u.value !== id))
   }
 
   const watchWorker = watch("workers"); 
-  console.log(watchWorker)
+
+  const watchManager = watch("manager")
+//selectedUser
+
+  useEffect(()=>{
+    console.log(watchManager)
+    const value = managerValue.filter(u => !userValue.includes(u))
+    console.log(value)
+    let workerOptionCopy = workerOption.filter(u=> u.value !== watchManager)
+    console.log(workerOptionCopy)
+    setWorkerOption([...workerOptionCopy,...managerList.filter( u => u.value === value[0])])
+    setUserValue([...value,...workerOptionCopy.map(u => u.value)])
+  },[watchManager])
 
   useEffect(() => {
-    setWorkers([...workers, watchWorker])
+    setManagerValue(managerList.map(ma => ma.value))
+  },[])
+
+  useEffect(() => {
+    setWorker([...worker, watchWorker])
     setWorkerOption(workerOption.filter(u=> u.value !== watchWorker))
+    setManagerList(managerList.filter(u=> u.value !== watchWorker))
     setSelectedUser( [ ...selectedUser, ...workerOption.filter(u=> u.value === watchWorker)])
-    console.log(watchWorker)
   }, [watchWorker]);
 
+
   const onSubmit = async (data) => {
-    let { name,manager } = data;
-    workers.shift()
+    let { name,manager} = data;
+   const workers = worker.filter(wo => wo !== null)
+  //  console.log(name,manager,workers)
     try {
       dispatch(editTeam({ name,manager,workers,teamId }));
       handleCloseEditTeam()
@@ -101,7 +129,7 @@ function EditTeam({ teamId,workerList, managerList,handleCloseEditTeam }) {
           label= "manager"
           size="small" sx={{ width: 300 }}
           >
-          {user0.concat(managerList).map((option) => (
+          {managerList.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
             </option>
@@ -111,7 +139,7 @@ function EditTeam({ teamId,workerList, managerList,handleCloseEditTeam }) {
                 name="workers" 
                 label= "workers"
                 size="small" sx={{ width: 300 }}>
-                {workerOption.map(user=>(
+                {user0.concat(workerOption).map(user=>(
                   <option key={user.value} value={user.value}>{user.label}</option>
                 ))}
               </FSelect>

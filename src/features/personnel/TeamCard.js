@@ -47,20 +47,20 @@ function TeamCard({team,handleOpenEditTeam,handleOpenRemoveTeams }) {
               display: "flex",
               alignItems: "center"
             }}>
-            <Avatar  src={manager.imageUrl} alt={manager.name}  sx={{width:26,height:26,ml:2,mt:1}}/>
+            <Avatar  src={manager.avatarUrl} alt={manager.name}  sx={{width:26,height:26,ml:2,mt:1}}/>
             <Typography sx={{ color: "text.secondary",ml:"10px" }}>{manager.name}</Typography>
           </Box>
         </Box>
         <Box>
           <Typography variant="body2" sx={{fontWeight: 600, color: "#1f1f1f" ,fontSize: "1rem",margin: "22px 0  6px"}}>workers :</Typography>
           {(workers.length === 0) ? (<Box sx = {{height:22,m:1}}></Box>) : (
-            <AvatarGroup sx = {{justifyContent: "flex-end",ml:2,mt:1}} max = {6}>
+            <AvatarGroup sx = {{justifyContent: "flex-end",ml:2,mt:1,}} max = {4}>
             {workers.map((worker,index) => {
                 return (
                   <Avatar
                     key = {index}
                     alt={worker.name}
-                    src={worker.imageUrl}
+                    src={worker.avatarUrl}
                     sx = {{width:26,height:26}}
                   />
                 );

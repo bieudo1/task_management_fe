@@ -18,6 +18,7 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import LoadingScreen from "../../components/LoadingScreen";
 import LinearProgressWithLabel from"../../components/LinearProgressWithLabel";
 import PropTypes from 'prop-types';
+import useAuth from "../../hooks/useAuth";
 import File from "../file/File";
 import TaskInProject from "../task/TaskInProject";
 import { style } from "../../app/config";
@@ -26,8 +27,9 @@ import { style } from "../../app/config";
 LinearProgressWithLabel.propTypes = {
   value: PropTypes.number.isRequired,
 };
-
+//user.position ==="Manager"
 function ProjectProfilePage() {
+  const { user } = useAuth();
     const navigate = useNavigate();
   const [openFinished, setOpenFinished] = useState(false);
   const params = useParams();
@@ -144,7 +146,7 @@ function ProjectProfilePage() {
                   </List>
               </Box>
             </Card>
-              {finished && 
+              {(finished && user.position ==="Manager" ) && 
                 <Button 
                   variant="contained"
                   size="small"

@@ -13,7 +13,14 @@ const style = { width: "22%",
 margin: "4px",
 display: "flex",
 justifyContent: "center"}
-
+/*
+display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-end",
+    position: "absolute",
+    top: 0,
+    right: 0
+*/
 const Input = styled(MuiInput)`
   width: 42px;
 `;
@@ -21,13 +28,12 @@ function TaskCard({task,index,handleOpenReviewTask,handleOpenFileTask,status,han
 
   const dispatch = useDispatch(); 
 
-  const [value, setValue] = useState(task.progress);
+  const [value, setValue] = useState(task?.progress);
   useEffect(() => {
-    console.log(task.progress)
-    setValue(task.progress)
-  },[task.progress])
+    console.log(task?.progress)
+    setValue(task?.progress)
+  },[task?.progress])
 
-  console.log(value)
   const handleInputChange = (event) => {
     setValue(event.target.value === '' ? '' : Number(event.target.value));
   };
@@ -52,9 +58,9 @@ function TaskCard({task,index,handleOpenReviewTask,handleOpenFileTask,status,han
     const urgent = task.urgent
     const important = task.important
     if(important && urgent){
-      return <Typography sx ={{background:"green"}}>high</Typography>
-    }else if(!important && !urgent){
       return <Typography sx ={{background:"red"}}>short</Typography>
+    }else if(!important && !urgent){
+      return <Typography sx ={{background:"green"}}>high</Typography>
     }else{
       return<Typography sx ={{background:"yellow"}}>fit</Typography>
     }
@@ -75,16 +81,29 @@ function TaskCard({task,index,handleOpenReviewTask,handleOpenFileTask,status,han
                 sx={{widht:"210px",margin:"12px"}}>
                 <Typography sx={{padding:"10px"}}>
                   {task.name}
-
-                 {status === "review" &&
-                 <Button onClick={() => handleOpenReviewTask(task._id, task.review)}>
+                  </Typography>
+                <Typography sx={{pt:"10px", pl:"10px", fontWeight: 600}}>
+                assignee:
+                </Typography>
+                <Typography sx={{pl:"14px"}}>
+                {task?.assignee?.name}
+                </Typography>
+                  <Box 
+                    sx={{display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-end",
+                    position: "absolute",
+                    top: 0,
+                    right: 0}}>
+                 {(status === "review" || status ==="rework")  &&
+                 <Button onClick={() => handleOpenReviewTask(task._id, task?.review)}>
                     <RateReviewIcon/>
                   </Button>
                   }
                   <Button>
-                    <FileUploadIcon onClick={() => handleOpenFileTask(task._id,task.file,task.project._id)}/>
+                    <FileUploadIcon onClick={() => handleOpenFileTask(task._id,task?.file,task?.project._id)}/>
                   </Button>
-                </Typography>
+                  </Box>
                   <Box sx={style}>{prioritized()}</Box>
                   <Box sx = {{padding:"10px"}}>
                     <Grid container spacing={1} alignItems="center"sx={{ width: 200 }}>
@@ -114,7 +133,7 @@ function TaskCard({task,index,handleOpenReviewTask,handleOpenFileTask,status,han
                     </Grid>
                   </Box>
                 <Typography variant="caption" sx= {{fontSize: "0.8rem",padding:"10px"}}>
-                  {fDate(task.dueAt)}
+                  {fDate(task?.dueAt)}
                 </Typography>
         </Card>)}
         </>

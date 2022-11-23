@@ -22,6 +22,7 @@ const yupSchema = Yup.object().shape({
   name: Yup.string().required("name is required"),
 });
 
+const user0 = [{value:"",label:"",}]
 
 function EditTask({taskId,assignee,handleCloseEditTask,projectId}) {
   const { isLoading,tasksById } = useSelector(
@@ -59,6 +60,7 @@ function EditTask({taskId,assignee,handleCloseEditTask,projectId}) {
 
   const onSubmit = async (data) => {
     let { name, assignee,important,urgent } = data;
+    console.log(assignee)
     try {
       dispatch(editTask({ name, assignee, dueAt:value,important,urgent,taskId }));
       handleCloseEditTask()
@@ -89,7 +91,7 @@ function EditTask({taskId,assignee,handleCloseEditTask,projectId}) {
                 name="assignee" 
                 label= "assignee"
                 size="small" sx={{ width: 300 }}>
-                {assignee.map(user=>(
+                {user0.concat(assignee).map(user=>(
                   <option key={user.value} value={user.value}>{user.label}</option>
                 ))}
               </FSelect>
@@ -129,10 +131,10 @@ function EditTask({taskId,assignee,handleCloseEditTask,projectId}) {
             >
               Edit Task
             </LoadingButton>
+            <Button onClick={() =>handleCloseEditTask()}>Cancel</Button>
           </Box>
         </Stack>
       </FormProvider>
-      <Button onClick={() =>handleCloseEditTask()}>Cancel</Button>
     </Card>
   );
 }

@@ -63,10 +63,10 @@ const slice = createSlice({
           state.isLoading = false;
           state.error = null;
     
-          const { users, count, totalPages } = action.payload;
+          const { users, count, totalPages,userNoTeam } = action.payload;
           users.forEach((user) => (state.usersById[user._id] = user));
           state.currentPageUsers = users.map((user) => user._id);
-          state.userNoTeam = users.filter((user) => !user.team)
+          state.userNoTeam = userNoTeam
           state.totalUsers = count;
           state.totalUserPages = totalPages;
         },
@@ -102,7 +102,8 @@ const slice = createSlice({
           state.error = null;
           
           const {teamId,editTeam} = action.payload
-          
+
+          console.log(teamId,editTeam)
           state.teamsById[teamId] = editTeam
         }
     }
@@ -132,10 +133,11 @@ async (dispatch) => {
     try {
       const response = await apiService.post("/users", { name, email, password,phone1,phone2,position,teamId });
       dispatch(slice.actions.postUser(response.data));
+      if(teamId){
       dispatch(slice.actions.putTeam({
-        teamId:response.data.team._id,
+        teamId,
         editTeam:response.data.team}
-        ));
+        ))}
     } catch (error) {
       dispatch(slice.actions.hasError(error));
       toast.error(error.message);
@@ -213,9 +215,14 @@ export const getUsers =
   async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      await apiService.delete(`/users/${id}`);
+      const response = await apiService.delete(`/users/${id}`);
       dispatch(slice.actions.deleteUser({id}));
-    } catch (error) {
+      dispatch(slice.actions.putTeam({
+        teamId:response.data.team._id,
+        editTeam:response.data.team}
+        ))}
+  
+    catch (error) {
       dispatch(slice.actions.hasError(error));
       toast.error(error.message);
     }

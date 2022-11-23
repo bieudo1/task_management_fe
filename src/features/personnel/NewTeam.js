@@ -1,14 +1,10 @@
 import React, { useState,useEffect } from "react";
 import {
-  List,
   Stack,
-  Button,
   Alert,
   Card,
   Container,
 } from "@mui/material";
-import ListItem from '@mui/material/ListItem';
-import ClearIcon from '@mui/icons-material/Clear';
 import { LoadingButton } from "@mui/lab";
 
 import { useDispatch } from "react-redux";
@@ -26,14 +22,13 @@ const RegisterSchema = Yup.object().shape({
 const defaultValues = {
   name: "",
   manager: "",
-  workers: null,
 };
 
-function NewTeam({ workerList, managerList,handleCloseNewTeam }) {
+function NewTeam({ handleCloseNewTeam,userNoTeam }) {
+
+  userNoTeam = userNoTeam.map((user) =>({value: user._id,label: user.name}))
+
   const user0 = [{value:"",label:"",}]
-    const [workers, setWorkers] = useState([])
-    const [selectedUser, setSelectedUser] = useState([])
-    const [workerOption, setWorkerOption] = useState(user0.concat(workerList))
     const dispatch = useDispatch();
   
   const methods = useForm({
@@ -45,31 +40,14 @@ function NewTeam({ workerList, managerList,handleCloseNewTeam }) {
     handleSubmit,
     reset,
     setError,
-    watch,
     formState: { errors, isSubmitting },
   } = methods;
 
-  const handleDeleteSelect = (id) => {
-    setWorkers(workers.filter(a => a !== id))
-    setWorkerOption([...workerOption, ...selectedUser.filter(u => u.value === id)])
-    setSelectedUser(selectedUser.filter(u => u.value !== id))
-  }
-
-  const watchWorker = watch("workers"); 
-  console.log(watchWorker)
-
-  useEffect(() => {
-    setWorkers([...workers, watchWorker])
-    setWorkerOption(workerOption.filter(u=> u.value !== watchWorker))
-    setSelectedUser( [ ...selectedUser, ...workerOption.filter(u=> u.value === watchWorker)])
-    console.log(watchWorker)
-  }, [watchWorker]);
 
   const onSubmit = async (data) => {
     let { name,manager } = data;
-    workers.shift()
     try {
-      dispatch(postNewTeam({ name,manager,workers }));
+      dispatch(postNewTeam({ name,manager }));
       handleCloseNewTeam()
     } catch (error) {
       reset();
@@ -91,31 +69,12 @@ function NewTeam({ workerList, managerList,handleCloseNewTeam }) {
           label= "manager"
           size="small" sx={{ width: 300 }}
           >
-          {user0.concat(managerList).map((option) => (
+          {user0.concat(userNoTeam).map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
             </option>
         ))}
         </FSelect>
-              <FSelect 
-                name="workers" 
-                label= "workers"
-                size="small" sx={{ width: 300 }}>
-                {workerOption.map(user=>(
-                  <option key={user.value} value={user.value}>{user.label}</option>
-                ))}
-              </FSelect>
-              {(selectedUser.lenght !== 0 )&& 
-              <List sx ={{display: "flex",overflowX:"auto",overflowY:"auto"}}>
-                {selectedUser.map( user => (
-                <ListItem key= {user.value} >
-                  <p>{user.label}</p>
-                  <Button onClick={()=>handleDeleteSelect(user.value)}>
-                    <ClearIcon sx = {{ width: "0.5em",height: "0.5em"}} />
-                  </Button>
-                </ListItem>
-                ))}
-              </List>}
           <LoadingButton
             fullWidth
             size="large"
