@@ -29,7 +29,6 @@ const RegisterSchema = Yup.object().shape({
     .required("Please confirm your password")
     .oneOf([Yup.ref("password")], "Passwords must match"),
     phone1: Yup.string().matches(phoneRegex, "Invalid phone").required("Phone is required"),
-    phone2: Yup.string().matches(phoneRegex, "Invalid phone").required("Phone is required"),
 });
 
 const defaultValues = {
@@ -58,9 +57,9 @@ function RegisterPage() {
   } = methods;
 
   const onSubmit = async (data) => {
-    const { name, email, password,phone1,phone2 } = data;
+    const { name, email, password,phone1 } = data;
     try {
-      await auth.register({ name, email, password,phone1,phone2,position:"Ceo" }, () => {
+      await auth.register({ name, email, password,phone1,position:"Ceo" }, () => {
         navigate("/", { replace: true });
       });
     } catch (error) {
@@ -126,7 +125,7 @@ function RegisterPage() {
             }}
           />
           <FTextField name="phone1" label="phone1" />
-          <FTextField name="phone2" label="phone2" />
+          <FTextField name=" label=" />
 
 
           <LoadingButton

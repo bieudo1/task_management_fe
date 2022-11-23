@@ -27,7 +27,6 @@ const RegisterSchema = Yup.object().shape({
   password: Yup.string().required("Password is required"),
     position: Yup.string(),
     phone1: Yup.string().matches(phoneRegex, "Invalid phone").required("Phone is required"),
-    phone2: Yup.string().matches(phoneRegex, "Invalid phone"),
 });
 
 
@@ -38,7 +37,6 @@ const defaultValues = {
   team:null,
   position:"Worker",
   phone1:"",
-  phone2:"",
 };
 
 function NewUser({handleCloseNewUser}) {
@@ -63,9 +61,9 @@ function NewUser({handleCloseNewUser}) {
   } = methods;
 
   const onSubmit = async (data) => {
-    let { name, email, password,phone1,phone2,position,team } = data;
+    let { name, email, password,phone1,position,team } = data;
     try {
-      dispatch(postNewUser({ name, email, password,phone1,phone2,position,teamId:team }));
+      dispatch(postNewUser({ name, email, password,phone1,position,teamId:team }));
       handleCloseNewUser()
     } catch (error) {
       reset();
@@ -114,7 +112,6 @@ function NewUser({handleCloseNewUser}) {
         </FSelect>
           <Box sx = {{display: "flex"}}>
             <FTextField name="phone1" label="phone1" />
-            <FTextField name="phone2" label="phone2" />
           </Box>
 
           <LoadingButton

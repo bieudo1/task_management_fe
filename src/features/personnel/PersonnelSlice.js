@@ -127,11 +127,11 @@ async (dispatch) => {
 }
 
  export const postNewUser =
-  ({ name, email, password,phone1,phone2,position,teamId }) =>
+  ({ name, email, password,phone1,position,teamId }) =>
   async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await apiService.post("/users", { name, email, password,phone1,phone2,position,teamId });
+      const response = await apiService.post("/users", { name, email, password,phone1,position,teamId });
       dispatch(slice.actions.postUser(response.data));
       if(teamId){
       dispatch(slice.actions.putTeam({
@@ -233,7 +233,7 @@ export const getUsers =
     email,
     avatarUrl,
     phone1,
-    phone2,
+
   }) =>
   async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -244,8 +244,7 @@ export const getUsers =
         email,
         avatarUrl,
         phone1,
-        phone2
-      }
+          }
       if (avatarUrl instanceof File) {
         const imageUrl = await cloudinaryUpload(avatarUrl);
         data.avatarUrl = imageUrl;

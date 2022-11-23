@@ -35,11 +35,6 @@ function UserTable({ users,handleOpenRemoveUser }) {
               <TableCell sx={{ display: { xs: "none", md: "table-cell" } }}>
                 Phone1
               </TableCell>
-              <TableCell
-                sx={{ display: { xs: "none", sm: "table-cell" }, width: "20%" }}
-              >
-                Phone2
-              </TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
@@ -85,20 +80,7 @@ function UserTable({ users,handleOpenRemoveUser }) {
                     sx={{ display: { xs: "none", md: "table-cell" } }}
                   >
                     {user.phone1}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ display: { xs: "none", md: "table-cell" } }}
-                  >
-                    {user.phone2}
-                  </TableCell>
-                  {/* <TableCell
-                    align="left"
-                    sx={{ display: { xs: "none", sm: "table-cell" } }}
-                  >
-                    {status}
-                  </TableCell>
-                */}
+                  </TableCell>                
                 <TableCell align="left">
                   <Button onClick={() => handleOpenRemoveUser(user._id)}>
                     xóa

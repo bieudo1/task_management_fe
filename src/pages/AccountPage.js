@@ -24,7 +24,6 @@ function AccountPage() {
     email: user?.email || "",
     avatarUrl: user?.avatarUrl || "",
     phone1: user?.phone1 || "",
-    phone2: user?.phone2 || "",
   };
 
   const methods = useForm({
@@ -109,7 +108,6 @@ function AccountPage() {
               <FTextField name="company" label="Company" />
 
               <FTextField name="phone1" label="phone1" />
-              <FTextField name="phone2" label="phone2" />
             </Box>
 
             <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>

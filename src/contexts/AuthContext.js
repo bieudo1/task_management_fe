@@ -49,7 +49,6 @@ const reducer = (state, action) => {
         email,
         avatarUrl,
         phone1,
-        phone2,
        
       } = action.payload;
       return {
@@ -60,7 +59,6 @@ const reducer = (state, action) => {
           email,
           avatarUrl,
           phone1,
-          phone2,
  
         },
       };
@@ -144,13 +142,12 @@ function AuthProvider({ children }) {
     callback();
   };
 
-  const register = async ({ name, email, password,phone1,phone2,position }, callback) => {
+  const register = async ({ name, email, password,phone1,position }, callback) => {
     const response = await apiService.post("/users", {
       name,
       email,
       password,
       phone1,
-      phone2,
       position
     });
 
