@@ -82,12 +82,6 @@ function TaskCard({task,index,handleOpenReviewTask,handleOpenFileTask,status,han
                 <Typography sx={{padding:"10px"}}>
                   {task.name}
                   </Typography>
-                <Typography sx={{pt:"10px", pl:"10px", fontWeight: 600}}>
-                assignee:
-                </Typography>
-                <Typography sx={{pl:"14px"}}>
-                {task?.assignee?.name}
-                </Typography>
                   <Box 
                     sx={{display: "flex",
                     flexDirection: "column",

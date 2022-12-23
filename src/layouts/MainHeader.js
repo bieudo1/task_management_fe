@@ -15,14 +15,18 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { Avatar, Divider } from "@mui/material";
 import useAuth from "../hooks/useAuth";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import { useDispatch,useSelector } from 'react-redux';
 import { openDrawer } from '../app/menu';
 import { drawerWidth} from "../app/config";
+import BarChartIcon from '@mui/icons-material/BarChart';
+import TaskIcon from '@mui/icons-material/Task';
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -189,28 +193,28 @@ function MainHeader() {
   const PROFILE_TABS_Staff = [
     {
       value: "Task",
-      icon: <AccountBoxIcon sx={{ fontSize: 24 }} />,
+      icon: <TaskIcon sx={{ fontSize: 24 }} />,
     },
     {
       value: "Projects",
-      icon: <PeopleAltIcon sx={{ fontSize: 24 }} />,
+      icon: <AccountTreeIcon sx={{ fontSize: 24 }} />,
     },
     {
       value: "TaskTeam",
-      icon: <PeopleAltIcon sx={{ fontSize: 24 }} />,
+      icon: <FormatListBulletedIcon sx={{ fontSize: 24 }} />,
     },
   ];
 
   const Personnel = [
     {
       value: "Personnel",
-      icon: <AccountBoxIcon sx={{ fontSize: 24 }} />,
+      icon: <PersonAddAltIcon sx={{ fontSize: 24 }} />,
     },
   ];
 
   const CEO = [{
     value: "Admin",
-    icon: <AccountBoxIcon sx={{ fontSize: 24 }} />,
+    icon: <BarChartIcon sx={{ fontSize: 24 }} />,
   },]
 
   useEffect(() => {

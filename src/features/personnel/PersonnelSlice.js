@@ -46,6 +46,7 @@ const slice = createSlice({
           state.error = null;
 
           const { team } = action.payload;
+          state.teamOptions = [...state.teamOptions,{value: team._id,label: team.name} ]
           state.totalTeamm += 1;
           state.teamsById[team._id] = team
           state.currentPageTeams.unshift(team._id);
@@ -56,6 +57,7 @@ const slice = createSlice({
 
           const { id } = action.payload;
           state.totalUsers -= 1;
+          state.teamOptions = state.teamOptions.filter(team => team.value !== id )
           state.teamsById[id] = undefined
           state.currentPageTeams = state.currentPageTeams.filter(user => user !== id);
         },
