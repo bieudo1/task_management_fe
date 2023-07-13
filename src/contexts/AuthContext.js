@@ -44,13 +44,7 @@ const reducer = (state, action) => {
         user: null,
       };
     case UPDATE_PROFILE:
-      const {
-        name,
-        email,
-        avatarUrl,
-        phone1,
-       
-      } = action.payload;
+      const { name, email, avatarUrl, phone1 } = action.payload;
       return {
         ...state,
         user: {
@@ -59,7 +53,6 @@ const reducer = (state, action) => {
           email,
           avatarUrl,
           phone1,
- 
         },
       };
     default:
@@ -90,10 +83,8 @@ function AuthProvider({ children }) {
 
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
-
           const response = await apiService.get("/users/me");
           const user = response.data.user;
-          console.log(user)
 
           dispatch({
             type: INITIALIZE,
@@ -125,8 +116,7 @@ function AuthProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    if (updatedProfile)
-      dispatch({ type: UPDATE_PROFILE, payload: updatedProfile });
+    if (updatedProfile) dispatch({ type: UPDATE_PROFILE, payload: updatedProfile });
   }, [updatedProfile]);
 
   const login = async ({ email, password }, callback) => {
@@ -142,13 +132,13 @@ function AuthProvider({ children }) {
     callback();
   };
 
-  const register = async ({ name, email, password,phone1,position }, callback) => {
+  const register = async ({ name, email, password, phone1, position }, callback) => {
     const response = await apiService.post("/users", {
       name,
       email,
       password,
       phone1,
-      position
+      position,
     });
 
     const { user, accessToken } = response.data;

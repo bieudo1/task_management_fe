@@ -1,18 +1,15 @@
-import React,{useState,useEffect} from "react";
-import { Grid, Card, Typography, Button,Box,Slider } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Grid, Card, Typography, Button, Box, Slider } from "@mui/material";
 import { fDate } from "../../utils/formatTime";
-import MuiInput from '@mui/material/Input';
-import RateReviewIcon from '@mui/icons-material/RateReview';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
+import MuiInput from "@mui/material/Input";
+import RateReviewIcon from "@mui/icons-material/RateReview";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { Draggable } from "react-beautiful-dnd";
-import { styled } from '@mui/material/styles';
-import {progressTask} from "./TaskSlice"
+import { styled } from "@mui/material/styles";
+import { progressTask } from "./TaskSlice";
 import { useDispatch } from "react-redux";
 
-const style = { width: "22%",
-margin: "4px",
-display: "flex",
-justifyContent: "center"}
+const style = { width: "22%", margin: "4px", display: "flex", justifyContent: "center" };
 /*
 display: "flex",
     flexDirection: "column",
@@ -24,29 +21,27 @@ display: "flex",
 const Input = styled(MuiInput)`
   width: 42px;
 `;
-function TaskCard({task,index,handleOpenReviewTask,handleOpenFileTask,status,handleOpenProgress}) {
-
-  const dispatch = useDispatch(); 
+function TaskCard({ task, index, handleOpenReviewTask, handleOpenFileTask, status, handleOpenProgress }) {
+  const dispatch = useDispatch();
 
   const [value, setValue] = useState(task?.progress);
   useEffect(() => {
-    console.log(task?.progress)
-    setValue(task?.progress)
-  },[task?.progress])
+    setValue(task?.progress);
+  }, [task?.progress]);
 
   const handleInputChange = (event) => {
-    setValue(event.target.value === '' ? '' : Number(event.target.value));
+    setValue(event.target.value === "" ? "" : Number(event.target.value));
   };
 
-  const handleSliderChange = (e,newValue) => {
-    console.log(newValue)
+  const handleSliderChange = (e, newValue) => {
+    console.log(newValue);
     setValue(newValue);
   };
 
   const handleBlur = () => {
-    console.log("1",value)
+    console.log("1", value);
     setValue(value);
-    dispatch(progressTask({progress:value,taskId:task._id}))
+    dispatch(progressTask({ progress: value, taskId: task._id }));
     if (value < 0) {
       setValue(0);
     } else if (value > 100) {
@@ -54,62 +49,56 @@ function TaskCard({task,index,handleOpenReviewTask,handleOpenFileTask,status,han
     }
   };
 
-  const prioritized =() =>{
-    const urgent = task.urgent
-    const important = task.important
-    if(important && urgent){
-      return <Typography sx ={{background:"red"}}>short</Typography>
-    }else if(!important && !urgent){
-      return <Typography sx ={{background:"green"}}>high</Typography>
-    }else{
-      return<Typography sx ={{background:"yellow"}}>fit</Typography>
+  const prioritized = () => {
+    const urgent = task.urgent;
+    const important = task.important;
+    if (important && urgent) {
+      return <Typography sx={{ background: "red" }}>short</Typography>;
+    } else if (!important && !urgent) {
+      return <Typography sx={{ background: "green" }}>high</Typography>;
+    } else {
+      return <Typography sx={{ background: "yellow" }}>fit</Typography>;
     }
-  }
+  };
 
-    return (
+  return (
     <Draggable key={task._id} draggableId={task._id} index={index}>
       {(provided, snapshot) => {
         return (
-            <>
-            { (!task) ? (
-                <Typography></Typography>
-            ):(
-            <Card ref={provided.innerRef}
+          <>
+            {!task ? (
+              <Typography></Typography>
+            ) : (
+              <Card
+                ref={provided.innerRef}
                 snapshot={snapshot}
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
-                sx={{widht:"210px",margin:"12px"}}>
-                <Typography sx={{padding:"10px"}}>
-                  {task.name}
-                  </Typography>
-                  <Box 
-                    sx={{display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-end",
-                    position: "absolute",
-                    top: 0,
-                    right: 0}}>
-                 {(status === "review" || status ==="rework")  &&
-                 <Button onClick={() => handleOpenReviewTask(task._id, task?.review)}>
-                    <RateReviewIcon/>
-                  </Button>
-                  }
+                sx={{ widht: "210px", margin: "12px" }}
+              >
+                <Typography sx={{ padding: "10px" }}>{task.name}</Typography>
+                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", position: "absolute", top: 0, right: 0 }}>
+                  {(status === "review" || status === "rework") && (
+                    <Button onClick={() => handleOpenReviewTask(task._id, task?.review)}>
+                      <RateReviewIcon />
+                    </Button>
+                  )}
                   <Button>
-                    <FileUploadIcon onClick={() => handleOpenFileTask(task._id,task?.file,task?.project._id)}/>
+                    <FileUploadIcon onClick={() => handleOpenFileTask(task._id, task?.file, task?.project._id)} />
                   </Button>
-                  </Box>
-                  <Box sx={style}>{prioritized()}</Box>
-                  <Box sx = {{padding:"10px"}}>
-                    <Grid container spacing={1} alignItems="center"sx={{ width: 200 }}>
-                      <Grid item xs>
+                </Box>
+                <Box sx={style}>{prioritized()}</Box>
+                <Box sx={{ padding: "10px" }}>
+                  <Grid container spacing={1} alignItems="center" sx={{ width: 200 }}>
+                    <Grid item xs>
                       <Slider
                         size="small"
-                        value={typeof value === 'number' ? value : 0}
+                        value={typeof value === "number" ? value : 0}
                         onChange={handleSliderChange}
                         aria-labelledby="input-slider"
-                       />
-                      </Grid>
-                      <Grid item>
+                      />
+                    </Grid>
+                    <Grid item>
                       <Input
                         value={value}
                         size="small"
@@ -119,21 +108,22 @@ function TaskCard({task,index,handleOpenReviewTask,handleOpenFileTask,status,han
                           step: 10,
                           min: 0,
                           max: 100,
-                          type: 'number',
-                          'aria-labelledby': 'input-slider',
+                          type: "number",
+                          "aria-labelledby": "input-slider",
                         }}
                       />
-                      </Grid>
                     </Grid>
-                  </Box>
-                <Typography variant="caption" sx= {{fontSize: "0.8rem",padding:"10px"}}>
+                  </Grid>
+                </Box>
+                <Typography variant="caption" sx={{ fontSize: "0.8rem", padding: "10px" }}>
                   {fDate(task?.dueAt)}
                 </Typography>
-        </Card>)}
-        </>
-        )
+              </Card>
+            )}
+          </>
+        );
       }}
     </Draggable>
-    )
+  );
 }
 export default TaskCard;

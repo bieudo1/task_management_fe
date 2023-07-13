@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Routes, Route,useLocation} from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import BlankLayout from "../layouts/BlankLayout";
 import MainLayout from "../layouts/MainLayout";
 import LoginPage from "../pages/LoginPage";
@@ -13,12 +13,9 @@ import Admin from "../features/admin/Admin";
 import AccountPage from "../pages/AccountPage";
 import ProjectProfilePage from "../features/project/ProjectProfilePage";
 
-
-
 function Router() {
-  const location= useLocation()
+  const location = useLocation();
   // let params = new URLSearchParams(location.pathname);
-  console.log(location.pathname)
   return (
     <Routes>
       <Route
