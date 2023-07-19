@@ -1,5 +1,10 @@
 # task_management_fe
 
+## Demo account
+
+Account: toanh@gmail.com
+Password: 123
+
 ### User Story
 #### Background
 Help with project and task management
